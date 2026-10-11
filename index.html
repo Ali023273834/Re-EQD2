@@ -1,0 +1,1184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#a8842c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ReRT EQD2">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>BOC ReRT EQD2</title>
+<style>
+/* Mobile-first wizard. Fully offline: no external fonts, scripts or images. */
+:root{
+  --bg:#faf7ef; --card:#ffffff; --ink:#1f1c15; --muted:#6e6655; --line:#e2d8c0;
+  --gold:#a8842c; --gold-ink:#ffffff; --gold-soft:#f4ecd6; --slot:#fbf0d2; --calc:#f3efe4;
+  --ok:#2f7a4a; --ok-bg:#e3f1e7; --warn:#946400; --warn-bg:#fbefd2; --bad:#a3282b; --bad-bg:#f8e1e1;
+  --c1:#b9a46e; --c2:#5b6f8f;
+  --serif:"Times New Roman",Times,Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#14120d; --card:#1e1b14; --ink:#efe9da; --muted:#a79e88; --line:#3a3424;
+  --gold:#d4ae57; --gold-ink:#1a160c; --gold-soft:#2b2516; --slot:#2f2814; --calc:#25211a;
+  --ok:#83d19c; --ok-bg:#1b3223; --warn:#e9bf5f; --warn-bg:#372b10; --bad:#f28e90; --bad-bg:#3a1a1b;
+  --c1:#9d8b59; --c2:#8098bb; color-scheme:dark}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.4}
+.top{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:3px double var(--gold);padding:calc(10px + env(safe-area-inset-top,0px)) 16px 8px}
+.brand{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.brand b{font-family:var(--serif);font-size:19px}
+.brand span{font-size:12px;color:var(--muted);text-align:right}
+.steps{display:flex;gap:6px;margin-top:8px;overflow-x:auto;scrollbar-width:none}
+.steps::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;border:1px solid var(--line);background:var(--card);color:var(--muted);border-radius:999px;padding:6px 11px;font-size:13.5px;font-family:var(--sans);cursor:pointer}
+.chip.on{background:var(--gold);border-color:var(--gold);color:var(--gold-ink);font-weight:700}
+.chip.done:not(.on){color:var(--ink);border-color:var(--gold)}
+main{max-width:720px;margin:0 auto;padding:16px 16px calc(96px + env(safe-area-inset-bottom,0px));display:grid;gap:14px}
+h2{font-family:var(--serif);font-size:22px;margin:4px 0 0}
+.lead{color:var(--muted);font-size:14.5px;margin:-4px 0 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;gap:12px}
+.card.slot{background:var(--slot);border-color:var(--gold)}
+.card h3{margin:0;font-size:16px;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.card h3 small{font-weight:400;color:var(--muted);font-size:13px}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}
+.row.two{grid-template-columns:1fr 1fr}
+label.f{display:grid;gap:4px;font-size:13px;color:var(--muted);min-width:0}
+input,select,textarea{font:inherit;font-size:16px;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px 11px;width:100%;min-width:0}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--gold);outline-offset:0;border-color:var(--gold)}
+input.big{font-size:20px;font-weight:700;text-align:center;padding:10px 6px;font-variant-numeric:tabular-nums}
+.seg{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--gold);border-radius:10px;overflow:hidden}
+.seg button{border:0;background:var(--card);color:var(--ink);padding:12px;font:inherit;font-weight:600;cursor:pointer}
+.seg button.on{background:var(--gold);color:var(--gold-ink)}
+.toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:15px}
+.switch{position:relative;width:50px;height:30px;flex:0 0 auto}
+.switch input{opacity:0;width:0;height:0;position:absolute}
+.switch span{position:absolute;inset:0;background:var(--line);border-radius:999px;transition:.2s}
+.switch span::after{content:"";position:absolute;width:24px;height:24px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 2px rgba(0,0,0,.3)}
+.switch input:checked+span{background:var(--gold)}
+.switch input:checked+span::after{transform:translateX(20px)}
+.switch input:focus-visible+span{outline:2px solid var(--gold);outline-offset:2px}
+.organ{border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:grid;gap:10px;background:var(--card)}
+.organ.off{opacity:.55}
+.organ .head{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.organ .name{font-weight:700;font-size:15.5px}
+.organ .meta{font-size:12.5px;color:var(--muted)}
+.res{font-variant-numeric:tabular-nums;background:var(--calc);border-radius:8px;padding:6px 10px;font-size:14px;display:flex;justify-content:space-between;gap:8px}
+.res b{font-size:17px}
+.quick{display:flex;flex-wrap:wrap;gap:6px}
+.quick button{border:1px solid var(--gold);background:var(--card);color:var(--ink);border-radius:999px;padding:6px 12px;font:inherit;font-size:14px;cursor:pointer;min-width:52px}
+.quick button.on{background:var(--gold);color:var(--gold-ink);font-weight:700}
+.interval{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.interval b{font-size:28px;color:var(--gold);font-family:var(--serif)}
+.alert{border-radius:8px;padding:9px 12px;font-size:14px;font-weight:600}
+.alert.bad{background:var(--bad-bg);color:var(--bad)} .alert.warn{background:var(--warn-bg);color:var(--warn)}
+.note{font-size:13px;color:var(--muted);margin:0}
+.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px;text-align:center}
+.tile b{display:block;font-size:24px;font-family:var(--serif)}
+.tile span{font-size:12.5px;color:var(--muted)}
+.tile.bad b{color:var(--bad)} .tile.warn b{color:var(--warn)} .tile.ok b{color:var(--ok)}
+.rc{border:1px solid var(--line);border-left:5px solid var(--line);border-radius:10px;padding:10px 12px;display:grid;gap:8px;background:var(--card)}
+.rc.ok{border-left-color:var(--ok)} .rc.warn{border-left-color:var(--warn)} .rc.bad{border-left-color:var(--bad)}
+.rc .head{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.pill{font-size:12.5px;font-weight:700;border-radius:999px;padding:3px 9px;white-space:nowrap}
+.pill.ok{background:var(--ok-bg);color:var(--ok)} .pill.warn{background:var(--warn-bg);color:var(--warn)} .pill.bad{background:var(--bad-bg);color:var(--bad)} .pill.na{background:var(--calc);color:var(--muted)}
+.track{position:relative;height:14px;background:var(--calc);border-radius:7px;display:flex;overflow:visible}
+.track i{display:block;height:100%} .track i:first-child{border-radius:7px 0 0 7px}
+.track .a{background:var(--c1)} .track .b{background:var(--c2)}
+.track .lim{position:absolute;top:-4px;bottom:-4px;width:3px;background:var(--bad);border-radius:2px}
+.nums{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.nums b{display:block;color:var(--ink);font-size:15px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--muted)}
+.legend i{display:inline-block;width:12px;height:10px;border-radius:2px;margin-right:5px;vertical-align:middle}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{border:1px solid var(--gold);background:var(--card);color:var(--ink);border-radius:10px;padding:12px;font:inherit;font-weight:600;cursor:pointer;text-align:center}
+.btn.primary{background:var(--gold);color:var(--gold-ink)}
+.btn.ghost{border-color:var(--line);color:var(--muted);font-weight:500}
+.btn:focus-visible,.chip:focus-visible,.quick button:focus-visible,.seg button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:5;background:var(--bg);border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));display:flex;gap:10px;justify-content:center}
+.nav .btn{flex:1;max-width:340px}
+.add{display:grid;grid-template-columns:1fr auto;gap:8px}
+.x{border:0;background:none;color:var(--muted);font-size:13px;cursor:pointer;padding:4px 6px;text-decoration:underline}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:999px;font-size:14px;z-index:9}
+.iosHint{max-width:720px;margin:12px auto 0;display:flex;gap:10px;align-items:center;justify-content:space-between;background:var(--gold-soft);border:1px solid var(--gold);border-radius:10px;padding:10px 12px;font-size:14px;margin-inline:16px}
+@media (min-width:752px){.iosHint{margin-inline:auto}}
+.iosHint button{border:0;background:none;color:var(--muted);font-size:16px;cursor:pointer;padding:4px 8px}
+.foot{font-size:12px;color:var(--muted);text-align:center}
+.credit{display:flex;align-items:center;gap:8px;margin-top:6px;font-size:12.5px;color:var(--muted);flex-wrap:wrap}
+.credit .tag{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--warn);background:var(--warn-bg);border-radius:999px;padding:2px 8px}
+[hidden]{display:none!important}
+@media print{
+  .top .steps,.nav,.actions,.toast,.noprint{display:none!important}
+  .top{position:static} main{padding:0} body{background:#fff}
+  .rc,.card{break-inside:avoid}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><b>Re-irradiation EQD2</b><span>Bahrain Oncology Center<br>Medical Physics</span></div>
+  <div class="credit"><span class="tag">Under testing</span><span>Designed by Ali Eid · Under testing by the Radiation Oncology team</span></div>
+  <nav class="steps" id="steps" aria-label="Steps"></nav>
+</header>
+<div id="iosHint" class="iosHint" hidden><span>Install: tap <b>Share</b> then <b>Add to Home Screen</b>. It then works offline.</span><button type="button" id="iosHintX" aria-label="Dismiss">✕</button></div>
+<main id="main"></main>
+<div class="nav"><button class="btn ghost" id="backBtn" type="button">Back</button><button class="btn primary" id="nextBtn" type="button">Next</button></div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+const CFG = {"HN": {"title": "Head & Neck Re-irradiation", "comp1": "Phase 1", "comp2": "Boost / phase 2", "abnote": "CNS, optic structures and nerves 2 Gy; vessels, bone and larynx 3 Gy (confirm per BOC policy).", "recnote": "Partial credit only for CNS structures (spinal cord, brainstem) where literature supports it. No credit for vessels, peripheral nerves, bone, mucosa or larynx unless specifically justified. Spinal cord: Nieder et al., IJROBP 2005: low myelopathy risk with cumulative BED ≤ 135.5 Gy₂ (EQD2 ≈ 67.8 Gy), interval ≥ 6 months and no single course > 98 Gy₂.", "organs": [{"n": "Spinal cord", "ab": 2, "m": "D0.03cc", "lim": 67.8, "rdef": 0.25}, {"n": "Brainstem", "ab": 2, "m": "D0.03cc", "lim": 75, "rdef": 0.25}, {"n": "Optic chiasm", "ab": 2, "m": "D0.03cc", "lim": 65, "rdef": 0}, {"n": "Temporal lobe (L)", "ab": 2, "m": "D1cc", "lim": 90, "rdef": 0}, {"n": "Carotid artery (L)", "ab": 3, "m": "Dmax", "lim": 120, "rdef": 0}, {"n": "Brachial plexus (L)", "ab": 2, "m": "D0.03cc", "lim": 95, "rdef": 0}, {"n": "Mandible", "ab": 3, "m": "D1cc", "lim": 110, "rdef": 0}, {"n": "Larynx", "ab": 3, "m": "Dmean", "lim": 80, "rdef": 0}], "ex": {"p": {"name": "Example Patient", "mrn": "000000", "dx": "Recurrent SCC, left oropharynx", "c1rx": "70 Gy / 35 fx VMAT", "c2rx": "60 Gy / 30 fx VMAT"}, "c1end": "2023-06-20", "c2start": "2026-10-26", "organs": [{"n": "Spinal cord", "ab": 2, "m": "D0.03cc", "a1": [44, 35], "b1": [null, null], "r": 0.25, "a2": [20, 30], "b2": [null, null], "lim": 67.8, "basis": "Recovery: interval > 24 mo, CNS (Nieder 2005). Constraint: cumulative BED 135.5 Gy₂"}, {"n": "Brainstem", "ab": 2, "m": "D0.03cc", "a1": [48, 35], "b1": [null, null], "r": 0.25, "a2": [14, 30], "b2": [null, null], "lim": 75, "basis": "Recovery: conservative CNS credit. Constraint: example – confirm BOC policy"}, {"n": "Optic chiasm", "ab": 2, "m": "D0.03cc", "a1": [30, 35], "b1": [null, null], "r": 0, "a2": [8, 30], "b2": [null, null], "lim": 65, "basis": "No recovery assumed. Constraint: example – confirm BOC policy"}, {"n": "Temporal lobe (L)", "ab": 2, "m": "D1cc", "a1": [22, 35], "b1": [null, null], "r": 0, "a2": [10, 30], "b2": [null, null], "lim": 90, "basis": "No recovery assumed. Constraint: example – confirm BOC policy"}, {"n": "Carotid artery (L)", "ab": 3, "m": "Dmax", "a1": [70, 35], "b1": [null, null], "r": 0, "a2": [54, 30], "b2": [null, null], "lim": 120, "basis": "No recovery for large vessels. Constraint: example – confirm BOC policy"}, {"n": "Brachial plexus (L)", "ab": 2, "m": "D0.03cc", "a1": [60, 35], "b1": [null, null], "r": 0, "a2": [30, 30], "b2": [null, null], "lim": 95, "basis": "No recovery for peripheral nerve. Constraint: example – confirm BOC policy"}, {"n": "Mandible", "ab": 3, "m": "D1cc", "a1": [66, 35], "b1": [null, null], "r": 0, "a2": [40, 30], "b2": [null, null], "lim": 110, "basis": "No recovery for bone. Constraint: example – confirm BOC policy"}, {"n": "Larynx", "ab": 3, "m": "Dmean", "a1": [45, 35], "b1": [null, null], "r": 0, "a2": [30, 30], "b2": [null, null], "lim": 80, "basis": "No recovery assumed. Constraint: example – confirm BOC policy"}]}}, "PEL": {"title": "Pelvic Re-irradiation", "comp1": "EBRT", "comp2": "Brachy / boost", "abnote": "Rectum, bladder, bowel, vagina and bone 3 Gy; sacral plexus and cauda equina 2 Gy (confirm per BOC policy). For brachytherapy, enter the summed D2cc over all fractions and the number of fractions.", "recnote": "Evidence for meaningful long-term recovery of rectum, bladder, sigmoid, small bowel and vagina is limited; most re-irradiation series assume none. Sacral plexus and cauda equina: no credit unless specifically justified. Any credit applied must be stated with its source.", "organs": [{"n": "Rectum", "ab": 3, "m": "D2cc", "lim": 100, "rdef": 0}, {"n": "Bladder", "ab": 3, "m": "D2cc", "lim": 120, "rdef": 0}, {"n": "Sigmoid colon", "ab": 3, "m": "D2cc", "lim": 100, "rdef": 0}, {"n": "Small bowel", "ab": 3, "m": "D2cc", "lim": 90, "rdef": 0}, {"n": "Vagina", "ab": 3, "m": "D2cc", "lim": 130, "rdef": 0}, {"n": "Sacral plexus", "ab": 2, "m": "D0.03cc", "lim": 80, "rdef": 0}, {"n": "Cauda equina", "ab": 2, "m": "D0.03cc", "lim": 75, "rdef": 0}, {"n": "Femoral head (L)", "ab": 3, "m": "Dmax", "lim": 70, "rdef": 0}], "ex": {"p": {"name": "Example Patient", "mrn": "000000", "dx": "Central recurrence, carcinoma cervix", "c1rx": "EBRT 45 Gy / 25 fx + HDR 7 Gy x 4", "c2rx": "Interstitial HDR 6 Gy x 5"}, "c1end": "2022-03-15", "c2start": "2026-10-28", "organs": [{"n": "Rectum", "ab": 3, "m": "D2cc", "a1": [45, 25], "b1": [14, 4], "r": 0, "a2": [null, null], "b2": [14, 5], "lim": 100, "basis": "No recovery assumed for rectum. Constraint: example – confirm BOC policy"}, {"n": "Bladder", "ab": 3, "m": "D2cc", "a1": [45, 25], "b1": [20, 4], "r": 0, "a2": [null, null], "b2": [16, 5], "lim": 120, "basis": "No recovery assumed for bladder. Constraint: example – confirm BOC policy"}, {"n": "Sigmoid colon", "ab": 3, "m": "D2cc", "a1": [45, 25], "b1": [16, 4], "r": 0, "a2": [null, null], "b2": [12.5, 5], "lim": 100, "basis": "No recovery assumed for bowel. Constraint: example – confirm BOC policy"}, {"n": "Small bowel", "ab": 3, "m": "D2cc", "a1": [45, 25], "b1": [12, 4], "r": 0, "a2": [null, null], "b2": [10, 5], "lim": 90, "basis": "No recovery assumed for bowel. Constraint: example – confirm BOC policy"}, {"n": "Vagina", "ab": 3, "m": "D2cc", "a1": [45, 25], "b1": [28, 4], "r": 0, "a2": [null, null], "b2": [20, 5], "lim": 130, "basis": "No recovery assumed. Fistula risk. Constraint: example – confirm BOC policy"}, {"n": "Sacral plexus", "ab": 2, "m": "D0.03cc", "a1": [46, 25], "b1": [4, 4], "r": 0, "a2": [null, null], "b2": [5, 5], "lim": 80, "basis": "No recovery for peripheral nerve. Constraint: example – confirm BOC policy"}, {"n": "Cauda equina", "ab": 2, "m": "D0.03cc", "a1": [40, 25], "b1": [null, null], "r": 0, "a2": [null, null], "b2": [null, null], "lim": 75, "basis": "Outside Course 2 volume. Constraint: example – confirm BOC policy"}, {"n": "Femoral head (L)", "ab": 3, "m": "Dmax", "a1": [40, 25], "b1": [null, null], "r": 0, "a2": [null, null], "b2": [null, null], "lim": 70, "basis": "Outside Course 2 volume. Constraint: example – confirm BOC policy"}]}}};
+const P = {
+ "refs": {
+  "ESTRO22": "Andratschke N, Willmann J, Appelt AL, et al. ESTRO–EORTC consensus on re-irradiation: definition, reporting, and clinical decision making. Lancet Oncol 2022;23:e469–e478.",
+  "ESTRO23": "Willmann J, Appelt AL, Balermpas P, et al. Re-irradiation in clinical practice: results of an international patterns of care survey within the ESTRO–EORTC E²-RADIatE platform. Radiother Oncol 2023;189:109947.",
+  "ASTRO24": "Lee SF, Hoskin PJ. Re-irradiation practice and ESTRO/EORTC consensus recommendations: 2023 ASTRO education panel. Ann Palliat Med 2024;13(4):1150–1153.",
+  "NG21": "Ng WT, Soong YL, Ahn YC, et al. International recommendations on re-irradiation by intensity-modulated radiotherapy for locally recurrent nasopharyngeal carcinoma. Int J Radiat Oncol Biol Phys 2021. doi:10.1016/j.ijrobp.2021.01.041",
+  "ARS22": "Ward MC, Koyfman SA, Bakst RL, et al. Retreatment of recurrent or second primary head and neck cancer after prior radiation: executive summary of the American Radium Society appropriate use criteria. Int J Radiat Oncol Biol Phys 2022;113(4):759–786 (full ARS document, Table 2).",
+  "NIEDER": "Nieder C, Grosu AL, Andratschke NH, Molls M. Proposal of human spinal cord reirradiation dose based on collection of data from 40 patients. Int J Radiat Oncol Biol Phys 2005;61:851–855; and update (38 patients), Int J Radiat Oncol Biol Phys 2006;66:1446–1449.",
+  "SLEVIN21": "Slevin F, Aitken K, Alongi F, et al. An international Delphi consensus for pelvic stereotactic ablative radiotherapy re-irradiation. Radiother Oncol 2021;164:104–114.",
+  "UKSABR25": "Moreno-Olmedo E, Owczarczyk K, Chadwick E, et al. Pelvic SABR re-irradiation: UK SABR Consortium guidance for use in routine clinical care. Tech Innov Patient Support Radiat Oncol 2025;35:100326.",
+  "FAUNDEZ26": "Faundez J, Schananier C, Villegas C, Retamales J. Brachytherapy reirradiation for local recurrences of gynaecological cancers: two clinical cases, literature review and OAR constraints. ecancer 2026;20:2091 (Table 1, citing Zolciak-Siwinska et al. and Abusaris et al.)."
+ },
+ "tps": [
+  "Monaco",
+  "RayStation",
+  "Oncentra Brachy",
+  "Brainlab Elements",
+  "XiO",
+  "Eclipse",
+  "Pinnacle",
+  "Other / external centre",
+  "Unknown"
+ ],
+ "methods": [
+  "DICOM dose – deformable registration, voxel EQD2",
+  "DICOM dose – rigid registration, voxel EQD2",
+  "DVH extracted from TPS – metric summation",
+  "Manual – from plan report / printed DVH",
+  "Estimated – prescription assumed to OAR (no plan available)"
+ ],
+ "sites": {
+  "HN": {
+   "organs": [
+    "Spinal cord",
+    "Brainstem",
+    "Optic chiasm",
+    "Temporal lobe",
+    "Carotid artery",
+    "Brachial plexus",
+    "Mandible",
+    "Larynx"
+   ],
+   "recovery": [
+    {
+     "organ": "Spinal cord",
+     "text": "Nieder 2005/06: cumulative BED ≤135.5 Gy₂ (EQD2 ≈67.8 Gy) low risk if interval ≥6 mo and no course >98 Gy₂ · Ng 2021: ≈50% partial recovery if interval ≥1 y (primate data) · ARS/CARE: limit 45→54 Gy after 2 y",
+     "refs": [
+      "NIEDER",
+      "NG21",
+      "ARS22"
+     ]
+    },
+    {
+     "organ": "Brainstem",
+     "text": "Ng 2021: lifetime 130–150% of tolerance (≈30–50%) · Dionisi (cited by Ng): 30–50% recovery assumed · ARS/CARE: 60→78 Gy after 2 y",
+     "refs": [
+      "NG21",
+      "ARS22"
+     ]
+    },
+    {
+     "organ": "Optic chiasm / nerves",
+     "text": "Ng 2021: lifetime 130–150% · Dionisi: no recovery assumed · ARS/CARE: 54→64.8 Gy after 2 y",
+     "refs": [
+      "NG21",
+      "ARS22"
+     ]
+    },
+    {
+     "organ": "Temporal lobe",
+     "text": "Ng 2021: lifetime 130–150% of 70 Gy; BED1cc 150 Gy may be safe",
+     "refs": [
+      "NG21"
+     ]
+    },
+    {
+     "organ": "Carotid artery",
+     "text": "No recovery assumed; fixed cumulative limits ≤120–125 Gy (ARS; Ng)",
+     "refs": [
+      "ARS22",
+      "NG21"
+     ]
+    },
+    {
+     "organ": "Brachial plexus",
+     "text": "No recovery %; risk lower if >2 y and <95 Gy (Chen 2017 in ARS)",
+     "refs": [
+      "ARS22"
+     ]
+    },
+    {
+     "organ": "Mandible",
+     "text": "No recovery assumed; ORN only above 100 Gy (Bots 2017 in ARS)",
+     "refs": [
+      "ARS22"
+     ]
+    },
+    {
+     "organ": "Larynx",
+     "text": "No validated recovery value; ARS notes high severe-toxicity risk",
+     "refs": [
+      "ARS22"
+     ]
+    }
+   ],
+   "protocols": [
+    {
+     "id": "BOC",
+     "label": "BOC local (editable)",
+     "refs": [
+      "NIEDER"
+     ],
+     "rec": "local",
+     "desc": "Departmental working values. Spinal cord from Nieder; other values are examples until BOC policy sets them.",
+     "recdef": [
+      25,
+      25,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "organs": [
+      {
+       "ab": 2,
+       "m": "D0.03cc",
+       "limS": 67.8,
+       "limL": null,
+       "cut": null,
+       "note": "Nieder: cumulative BED ≤135.5 Gy₂, interval ≥6 mo, each course ≤98 Gy₂"
+      },
+      {
+       "ab": 2,
+       "m": "D0.03cc",
+       "limS": 75,
+       "limL": null,
+       "cut": null,
+       "note": "Example – confirm BOC policy"
+      },
+      {
+       "ab": 2,
+       "m": "D0.03cc",
+       "limS": 65,
+       "limL": null,
+       "cut": null,
+       "note": "Example – confirm BOC policy"
+      },
+      {
+       "ab": 2,
+       "m": "D1cc",
+       "limS": 90,
+       "limL": null,
+       "cut": null,
+       "note": "Example – confirm BOC policy"
+      },
+      {
+       "ab": 3,
+       "m": "Dmax",
+       "limS": 120,
+       "limL": null,
+       "cut": null,
+       "note": "Example – confirm BOC policy"
+      },
+      {
+       "ab": 2,
+       "m": "D0.03cc",
+       "limS": 95,
+       "limL": null,
+       "cut": null,
+       "note": "Example – confirm BOC policy"
+      },
+      {
+       "ab": 3,
+       "m": "D1cc",
+       "limS": 110,
+       "limL": null,
+       "cut": null,
+       "note": "Example – confirm BOC policy"
+      },
+      {
+       "ab": 3,
+       "m": "Dmean",
+       "limS": 80,
+       "limL": null,
+       "cut": null,
+       "note": "Example – confirm BOC policy"
+      }
+     ]
+    },
+    {
+     "id": "NG_D",
+     "label": "International NPC consensus – desirable (Ng 2021)",
+     "refs": [
+      "NG21"
+     ],
+     "rec": "built-in",
+     "desc": "Lifetime limits = 130% of single-course tolerance. Recovery is built into the limit, so keep recovery at 0%.",
+     "recdef": null,
+     "organs": [
+      {
+       "ab": 2,
+       "m": "D0.03cc",
+       "limS": 58.5,
+       "limL": null,
+       "cut": null,
+       "note": "130% of 45 Gy"
+      },
+      {
+       "ab": 2,
+       "m": "D0.03cc",
+       "limS": 70.2,
+       "limL": null,
+       "cut": null,
+       "note": "130% of 54 Gy"
+      },
+      {
+       "ab": 2,
+       "m": "D0.03cc",
+       "limS": 70.2,
+       "limL": null,
+       "cut": null,
+       "note": "130% of 54 Gy"
+      },
+      {
+       "ab": 2,
+       "m": "D0.03cc",
+       "limS": 91,
+       "limL": null,
+       "cut": null,
+       "note": "130% of 70 Gy"
+      },
+      {
+       "ab": 3,
+       "m": "D0.03cc",
+       "limS": 125,
+       "limL": null,
+       "cut": null,
+       "note": "≤125 Gy (Dionisi et al.)"
+      },
+      {
+       "ab": 2,
+       "m": "D0.03cc",
+       "limS": null,
+       "limL": null,
+       "cut": null,
+       "note": "No value in Ng 2021"
+      },
+      {
+       "ab": 3,
+       "m": "D0.03cc",
+       "limS": null,
+       "limL": null,
+       "cut": null,
+       "note": "No value in Ng 2021"
+      },
+      {
+       "ab": 3,
+       "m": "Dmean",
+       "limS": null,
+       "limL": null,
+       "cut": null,
+       "note": "No value in Ng 2021"
+      }
+     ]
+    },
+    {
+     "id": "NG_A",
+     "label": "International NPC consensus – acceptable (Ng 2021)",
+     "refs": [
+      "NG21"
+     ],
+     "rec": "built-in",
+     "desc": "Lifetime limits = 150% of single-course tolerance. Recovery is built into the limit, so keep recovery at 0%.",
+     "recdef": null,
+     "organs": [
+      {
+       "ab": 2,
+       "m": "D0.03cc",
+       "limS": 67.5,
+       "limL": null,
+       "cut": null,
+       "note": "150% of 45 Gy"
+      },
+      {
+       "ab": 2,
+       "m": "D0.03cc",
+       "limS": 81,
+       "limL": null,
+       "cut": null,
+       "note": "150% of 54 Gy"
+      },
+      {
+       "ab": 2,
+       "m": "D0.03cc",
+       "limS": 81,
+       "limL": null,
+       "cut": null,
+       "note": "150% of 54 Gy (moderate consensus)"
+      },
+      {
+       "ab": 2,
+       "m": "D0.03cc",
+       "limS": 105,
+       "limL": null,
+       "cut": null,
+       "note": "150% of 70 Gy"
+      },
+      {
+       "ab": 3,
+       "m": "D0.03cc",
+       "limS": null,
+       "limL": null,
+       "cut": null,
+       "note": "No acceptable limit agreed (≈65% of panel gave none)"
+      },
+      {
+       "ab": 2,
+       "m": "D0.03cc",
+       "limS": null,
+       "limL": null,
+       "cut": null,
+       "note": "No value in Ng 2021"
+      },
+      {
+       "ab": 3,
+       "m": "D0.03cc",
+       "limS": null,
+       "limL": null,
+       "cut": null,
+       "note": "No value in Ng 2021"
+      },
+      {
+       "ab": 3,
+       "m": "Dmean",
+       "limS": null,
+       "limL": null,
+       "cut": null,
+       "note": "No value in Ng 2021"
+      }
+     ]
+    },
+    {
+     "id": "ARS",
+     "label": "US – ARS Appropriate Use Criteria (Ward 2022)",
+     "refs": [
+      "ARS22"
+     ],
+     "rec": "built-in",
+     "desc": "Cumulative planning objectives compiled in ARS Table 2. CNS limits are interval-dependent (CARE protocol, <2 y vs ≥2 y). No separate recovery discount.",
+     "recdef": null,
+     "organs": [
+      {
+       "ab": 2,
+       "m": "Dmax",
+       "limS": 45,
+       "limL": 54,
+       "cut": 24,
+       "note": "CARE protocol: 45 Gy <2 y, 54 Gy ≥2 y (α/β 2)"
+      },
+      {
+       "ab": 2,
+       "m": "Dmax",
+       "limS": 60,
+       "limL": 78,
+       "cut": 24,
+       "note": "CARE protocol: 60 Gy <2 y, 78 Gy ≥2 y (α/β 2)"
+      },
+      {
+       "ab": 3,
+       "m": "Dmax",
+       "limS": 54,
+       "limL": 64.8,
+       "cut": 24,
+       "note": "CARE protocol: 54 Gy <2 y, 64.8 Gy ≥2 y (α/β 3)"
+      },
+      {
+       "ab": 2,
+       "m": "Dmax",
+       "limS": null,
+       "limL": null,
+       "cut": null,
+       "note": "No limit in ARS table (ALARA)"
+      },
+      {
+       "ab": 3,
+       "m": "Dmax",
+       "limS": 120,
+       "limL": null,
+       "cut": null,
+       "note": "<120 Gy cumulative (bleed 6% below vs 25% above)"
+      },
+      {
+       "ab": 2,
+       "m": "Dmax",
+       "limS": 95,
+       "limL": null,
+       "cut": null,
+       "note": "Chen 2017: <95 Gy and >2 y = low risk"
+      },
+      {
+       "ab": 3,
+       "m": "Dmax",
+       "limS": 100,
+       "limL": null,
+       "cut": null,
+       "note": "Bots 2017: no ORN <100 Gy"
+      },
+      {
+       "ab": 3,
+       "m": "Dmean",
+       "limS": null,
+       "limL": null,
+       "cut": null,
+       "note": "No limit in ARS table; high toxicity risk noted"
+      }
+     ]
+    }
+   ]
+  },
+  "PEL": {
+   "organs": [
+    "Rectum",
+    "Bladder",
+    "Sigmoid colon",
+    "Small bowel",
+    "Vagina",
+    "Sacral plexus",
+    "Cauda equina",
+    "Femoral head"
+   ],
+   "recovery": [
+    {
+     "organ": "Rectum / sigmoid / colon",
+     "text": "Delphi 2021: 'some recovery' after ≥12 mo (80→100 Gy₃, no consensus) · UK SABR 2025: 30% (6–18 mo), 50% (>18 mo)",
+     "refs": [
+      "SLEVIN21",
+      "UKSABR25"
+     ]
+    },
+    {
+     "organ": "Bladder",
+     "text": "Delphi 2021: 'some recovery' after ≥12 mo, up to 110 Gy₃ D0.5cc (consensus) · UK SABR 2025: 30% / 50%",
+     "refs": [
+      "SLEVIN21",
+      "UKSABR25"
+     ]
+    },
+    {
+     "organ": "Small bowel",
+     "text": "Delphi 2021: 70→90 Gy₃ after ≥12 mo (no consensus) · UK SABR 2025: 30% / 50%",
+     "refs": [
+      "SLEVIN21",
+      "UKSABR25"
+     ]
+    },
+    {
+     "organ": "Vagina",
+     "text": "No re-irradiation specific recovery value found; assume 0% (fistula risk)",
+     "refs": []
+    },
+    {
+     "organ": "Sacral plexus / cauda equina",
+     "text": "Delphi 2021: 67 Gy₂ with no recovery (consensus); 85 Gy₂ after ≥12 mo (no consensus) · UK SABR 2025: 30% / 50% (rule derived from spinal cord modelling)",
+     "refs": [
+      "SLEVIN21",
+      "UKSABR25"
+     ]
+    },
+    {
+     "organ": "Femoral head",
+     "text": "No re-irradiation specific recovery value found",
+     "refs": []
+    }
+   ],
+   "protocols": [
+    {
+     "id": "BOC",
+     "label": "BOC local (editable)",
+     "refs": [],
+     "rec": "local",
+     "desc": "Departmental working values. Examples until BOC policy sets them.",
+     "recdef": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "organs": [
+      {
+       "ab": 3,
+       "m": "D2cc",
+       "limS": 100,
+       "limL": null,
+       "cut": null,
+       "note": "Example – confirm BOC policy"
+      },
+      {
+       "ab": 3,
+       "m": "D2cc",
+       "limS": 120,
+       "limL": null,
+       "cut": null,
+       "note": "Example – confirm BOC policy"
+      },
+      {
+       "ab": 3,
+       "m": "D2cc",
+       "limS": 100,
+       "limL": null,
+       "cut": null,
+       "note": "Example – confirm BOC policy"
+      },
+      {
+       "ab": 3,
+       "m": "D2cc",
+       "limS": 90,
+       "limL": null,
+       "cut": null,
+       "note": "Example – confirm BOC policy"
+      },
+      {
+       "ab": 3,
+       "m": "D2cc",
+       "limS": 130,
+       "limL": null,
+       "cut": null,
+       "note": "Example – confirm BOC policy"
+      },
+      {
+       "ab": 2,
+       "m": "D0.03cc",
+       "limS": 80,
+       "limL": null,
+       "cut": null,
+       "note": "Example – confirm BOC policy"
+      },
+      {
+       "ab": 2,
+       "m": "D0.03cc",
+       "limS": 75,
+       "limL": null,
+       "cut": null,
+       "note": "Example – confirm BOC policy"
+      },
+      {
+       "ab": 3,
+       "m": "Dmax",
+       "limS": 70,
+       "limL": null,
+       "cut": null,
+       "note": "Example – confirm BOC policy"
+      }
+     ]
+    },
+    {
+     "id": "DELPHI",
+     "label": "International Delphi – pelvic SABR re-RT (Slevin 2021)",
+     "refs": [
+      "SLEVIN21"
+     ],
+     "rec": "built-in",
+     "desc": "Optimal limits with no recovery; higher limits after ≥12 months where 'some recovery' is assumed. Only bladder (110) and sacral plexus/cauda (67) reached consensus.",
+     "recdef": null,
+     "organs": [
+      {
+       "ab": 3,
+       "m": "D0.5cc",
+       "limS": 80,
+       "limL": 100,
+       "cut": 12,
+       "note": "80 Gy₃ no recovery; 100 Gy₃ after ≥12 mo (no consensus)"
+      },
+      {
+       "ab": 3,
+       "m": "D0.5cc",
+       "limS": 80,
+       "limL": 110,
+       "cut": 12,
+       "note": "80 Gy₃ no recovery (no consensus); 110 Gy₃ after ≥12 mo (consensus)"
+      },
+      {
+       "ab": 3,
+       "m": "D0.5cc",
+       "limS": 80,
+       "limL": 100,
+       "cut": 12,
+       "note": "Colon/sigmoid grouped with rectum (no consensus)"
+      },
+      {
+       "ab": 3,
+       "m": "D0.5cc",
+       "limS": 70,
+       "limL": 90,
+       "cut": 12,
+       "note": "70 Gy₃ no recovery; 90 Gy₃ after ≥12 mo (no consensus)"
+      },
+      {
+       "ab": 3,
+       "m": "D0.5cc",
+       "limS": null,
+       "limL": null,
+       "cut": null,
+       "note": "No value in Delphi"
+      },
+      {
+       "ab": 2,
+       "m": "D0.1cc",
+       "limS": 67,
+       "limL": 85,
+       "cut": 12,
+       "note": "67 Gy₂ (consensus); 85 Gy₂ after ≥12 mo (no consensus)"
+      },
+      {
+       "ab": 2,
+       "m": "D0.1cc",
+       "limS": 67,
+       "limL": 85,
+       "cut": 12,
+       "note": "67 Gy₂ (consensus); 85 Gy₂ after ≥12 mo (no consensus)"
+      },
+      {
+       "ab": 3,
+       "m": "D10cc",
+       "limS": null,
+       "limL": null,
+       "cut": null,
+       "note": "No value in Delphi"
+      }
+     ]
+    },
+    {
+     "id": "UK",
+     "label": "UK SABR Consortium recovery rule (2025)",
+     "refs": [
+      "UKSABR25",
+      "SLEVIN21"
+     ],
+     "rec": "uk",
+     "desc": "Recovery applied to Course 1 dose: 0% <6 mo, 30% for 6–18 mo, 50% >18 mo. Limits shown are the Delphi no-recovery values; check against the UK guidance table before use.",
+     "recdef": null,
+     "organs": [
+      {
+       "ab": 3,
+       "m": "D0.5cc",
+       "limS": 80,
+       "limL": null,
+       "cut": null,
+       "note": "Delphi optimal limit + UK recovery"
+      },
+      {
+       "ab": 3,
+       "m": "D0.5cc",
+       "limS": 80,
+       "limL": null,
+       "cut": null,
+       "note": "Delphi optimal limit + UK recovery"
+      },
+      {
+       "ab": 3,
+       "m": "D0.5cc",
+       "limS": 80,
+       "limL": null,
+       "cut": null,
+       "note": "Delphi optimal limit + UK recovery"
+      },
+      {
+       "ab": 3,
+       "m": "D0.5cc",
+       "limS": 70,
+       "limL": null,
+       "cut": null,
+       "note": "Delphi optimal limit + UK recovery"
+      },
+      {
+       "ab": 3,
+       "m": "D0.5cc",
+       "limS": null,
+       "limL": null,
+       "cut": null,
+       "note": "No value"
+      },
+      {
+       "ab": 2,
+       "m": "D0.1cc",
+       "limS": 67,
+       "limL": null,
+       "cut": null,
+       "note": "Delphi optimal limit + UK recovery"
+      },
+      {
+       "ab": 2,
+       "m": "D0.1cc",
+       "limS": 67,
+       "limL": null,
+       "cut": null,
+       "note": "Delphi optimal limit + UK recovery"
+      },
+      {
+       "ab": 3,
+       "m": "D10cc",
+       "limS": null,
+       "limL": null,
+       "cut": null,
+       "note": "No value"
+      }
+     ]
+    },
+    {
+     "id": "GYN",
+     "label": "Gynae brachytherapy re-RT literature (Faundez 2026)",
+     "refs": [
+      "FAUNDEZ26"
+     ],
+     "rec": "built-in",
+     "desc": "Proposed cumulative limits from a 2026 literature review; no universal consensus. Interval ≥12 months often associated with lower toxicity.",
+     "recdef": null,
+     "organs": [
+      {
+       "ab": 3,
+       "m": "D2cc",
+       "limS": 100,
+       "limL": null,
+       "cut": null,
+       "note": "Zolciak-Siwinska et al."
+      },
+      {
+       "ab": 3,
+       "m": "D2cc",
+       "limS": 100,
+       "limL": null,
+       "cut": null,
+       "note": "Zolciak-Siwinska et al."
+      },
+      {
+       "ab": 3,
+       "m": "D2cc",
+       "limS": null,
+       "limL": null,
+       "cut": null,
+       "note": "No value in review table"
+      },
+      {
+       "ab": 3,
+       "m": "D10cc",
+       "limS": 110,
+       "limL": null,
+       "cut": null,
+       "note": "Abusaris et al."
+      },
+      {
+       "ab": 3,
+       "m": "D2cc",
+       "limS": null,
+       "limL": null,
+       "cut": null,
+       "note": "No value in review table"
+      },
+      {
+       "ab": 2,
+       "m": "D0.1cc",
+       "limS": null,
+       "limL": null,
+       "cut": null,
+       "note": "No value in review table"
+      },
+      {
+       "ab": 2,
+       "m": "D0.1cc",
+       "limS": null,
+       "limL": null,
+       "cut": null,
+       "note": "No value in review table"
+      },
+      {
+       "ab": 3,
+       "m": "Dmax",
+       "limS": null,
+       "limL": null,
+       "cut": null,
+       "note": "No value in review table"
+      }
+     ]
+    }
+   ]
+  }
+ }
+};
+const STEPS = ["Setup", "Course 1", "Recovery", "Course 2", "Results", "Evidence"];
+const KEY = "boc-rert-eqd2-app-v2";
+const CREDIT = "Designed by Ali Eid · Under testing by the Radiation Oncology team";
+const METRICS = ["Dmax","D0.03cc","D0.1cc","D0.5cc","D1cc","D2cc","D10cc","Dmean"];
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;");
+const f1 = v => Number.isFinite(v) ? v.toFixed(1) : "–";
+const numv = x => { const n = parseFloat(String(x ?? "").replace(",", ".")); return Number.isFinite(n) ? n : NaN; };
+const refShort = k => ({ESTRO22:"ESTRO–EORTC 2022",ESTRO23:"Willmann 2023",ASTRO24:"Lee & Hoskin 2024",NG21:"Ng 2021",ARS22:"ARS / Ward 2022",NIEDER:"Nieder 2005/06",SLEVIN21:"Slevin 2021",UKSABR25:"UK SABR 2025",FAUNDEZ26:"Faundez 2026"})[k] || k;
+
+const proto = () => P.sites[S.site].protocols.find(p => p.id === S.proto) || P.sites[S.site].protocols[0];
+function ukRule(m){ return !Number.isFinite(m) || m < 6 ? 0 : m <= 18 ? 30 : 50; }
+function months(){ const a = new Date(S.c1end), b = new Date(S.c2start); return (!isNaN(a) && !isNaN(b)) ? (b - a) / (864e5 * 30.4375) : NaN; }
+
+function blankOrgan(n){ return { n, ab: 3, m: "Dmax", limS: "", limL: null, cut: null, note: "", on: true, a1: "", b1: "", a2: "", b2: "", r: 0, basis: "" }; }
+function applyProto(id){
+  S.proto = id; const p = proto(), m = months();
+  p.organs.forEach((v, i) => { const o = S.organs[i]; if (!o) return;
+    Object.assign(o, { ab: v.ab, m: v.m, limS: v.limS ?? "", limL: v.limL, cut: v.cut, note: v.note });
+    o.r = p.rec === "local" ? (p.recdef ? p.recdef[i] : 0) : p.rec === "uk" ? ukRule(m) : 0;
+    o.basis = p.rec === "uk" ? `UK SABR 2025 rule (${o.r}% for ${Number.isFinite(m) ? m.toFixed(0) : "?"} mo)` : p.rec === "built-in" ? `None – recovery built into ${refShort(p.refs[0])} limit` : (p.recdef && p.recdef[i] ? "Local assumption – state source" : "No recovery assumed");
+  });
+}
+function limOf(o){ const m = months(); const L = (o.cut && Number.isFinite(m) && m >= o.cut && o.limL != null) ? o.limL : o.limS; return numv(L); }
+function freshState(site){
+  const st = { site, step: 0, proto: "BOC", name: "", mrn: "", c1end: "", c2start: "", boost: site === "PEL",
+    c1: { na: "", nb: "", tps: "", meth: "", reg: "" }, c2: { na: "", nb: "", tps: "", meth: "", reg: "" },
+    organs: P.sites[site].organs.map(blankOrgan) };
+  S = st; applyProto("BOC"); return S;
+}
+function exampleState(site){
+  const e = CFG[site].ex; freshState(site);
+  Object.assign(S, { name: e.p.name, mrn: e.p.mrn, c1end: e.c1end, c2start: e.c2start });
+  const firstN = k => { for (const o of e.organs) if (o[k] && o[k][1]) return o[k][1]; return ""; };
+  S.c1 = { na: firstN("a1"), nb: firstN("b1"), tps: site === "PEL" ? "Oncentra Brachy" : "Monaco", meth: P.methods[2], reg: "" };
+  S.c2 = { na: firstN("a2"), nb: firstN("b2"), tps: site === "PEL" ? "Oncentra Brachy" : "RayStation", meth: P.methods[2], reg: "" };
+  e.organs.forEach((o, i) => { for (const k of ["a1","b1","a2","b2"]) S.organs[i][k] = (o[k] && o[k][0] != null) ? o[k][0] : ""; });
+  applyProto("BOC"); return S;
+}
+let S;
+try { S = JSON.parse(localStorage.getItem(KEY) || "null"); } catch (_) { S = null; }
+if (!S || !P.sites[S.site]) exampleState("HN");
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (_) {} }
+
+function comp(D, n, ab){ D = numv(D); n = numv(n); ab = numv(ab); if (!Number.isFinite(D) || !(n > 0) || !(ab > 0)) return null; return D * (D / n + ab) / (2 + ab); }
+function course(o, c){
+  const C = S["c" + c]; const a = comp(o["a" + c], C.na, o.ab); const b = S.boost ? comp(o["b" + c], C.nb, o.ab) : null;
+  return (a === null && b === null) ? NaN : (a || 0) + (b || 0);
+}
+function calcOrgan(o){
+  const e1 = course(o, 1); let e2 = course(o, 2); if (!Number.isFinite(e2) && Number.isFinite(e1)) e2 = 0;
+  const r = Math.min(100, Math.max(0, numv(o.r) || 0)); const res = e1 * (1 - r / 100);
+  const cum = res + e2, nom = e1 + e2, lim = limOf(o);
+  let st = "na", lab = Number.isFinite(cum) ? "No constraint" : "No data", pct = NaN;
+  if (Number.isFinite(cum) && lim > 0){ pct = cum / lim * 100; st = pct > 100 ? "bad" : pct > 90 ? "warn" : "ok"; lab = pct > 100 ? "Exceeds" : pct > 90 ? "Caution" : "Within"; }
+  return { e1, e2, r, res, cum, nom, lim, st, lab, pct };
+}
+const active = () => S.organs.map((o, i) => [o, i]).filter(([o]) => o.on && o.n.trim());
+const recEvidence = name => { const k = String(name).toLowerCase().split(/[ (]/)[0]; return P.sites[S.site].recovery.find(r => r.organ.toLowerCase().includes(k)); };
+const doubleCount = () => proto().rec === "built-in" && active().some(([o]) => numv(o.r) > 0);
+
+/* ---------- views ---------- */
+function vSetup(){
+  const p = proto(), m = months();
+  return `<h2>Setup</h2><p class="lead">Choose the site and protocol, enter the dates, and check the organ list.</p>
+  <div class="seg" role="group" aria-label="Treatment site">
+    ${["HN","PEL"].map(k => `<button type="button" data-site="${k}" class="${S.site===k?"on":""}">${k==="HN"?"Head & neck":"Pelvis"}</button>`).join("")}
+  </div>
+  <div class="card"><h3>Patient</h3>
+    <div class="row two"><label class="f">Name<input data-k="name" value="${esc(S.name)}" autocomplete="off"></label>
+    <label class="f">MRN / CPR<input data-k="mrn" value="${esc(S.mrn)}" inputmode="numeric" autocomplete="off"></label></div>
+  </div>
+  <div class="card slot"><h3>Dates <small>sets the recovery interval</small></h3>
+    <div class="row two"><label class="f">End of Course 1<input type="date" data-k="c1end" value="${esc(S.c1end)}"></label>
+    <label class="f">Start of Course 2<input type="date" data-k="c2start" value="${esc(S.c2start)}"></label></div>
+    <p class="note">Interval: <b>${Number.isFinite(m) ? m.toFixed(1) + " months" : "–"}</b></p>
+  </div>
+  <div class="card"><h3>Constraint protocol <small>sets α/β, metric, limit, recovery</small></h3>
+    <select data-k="protoSel" aria-label="Protocol">${P.sites[S.site].protocols.map(x => `<option value="${x.id}"${x.id===S.proto?" selected":""}>${esc(x.label)}</option>`).join("")}</select>
+    <p class="note">${esc(p.desc)}${p.refs.length ? ` <b>Source:</b> ${p.refs.map(refShort).join("; ")}.` : ""}</p>
+    <p class="note">ESTRO–EORTC 2022 and ASTRO give no organ-specific numbers; their consensus sets the framework (EQD2/BED summation, reporting, conservative assumptions). See Evidence.</p>
+  </div>
+  <div class="card"><div class="toggle"><span>Courses include a second component<br><small style="color:var(--muted)">${esc(CFG[S.site].comp2)} in addition to ${esc(CFG[S.site].comp1)}</small></span>
+    <label class="switch"><input type="checkbox" data-k="boost" ${S.boost?"checked":""} aria-label="Second component"><span></span></label></div></div>
+  <div class="card"><h3>Organs at risk <small>α/β · metric · cumulative limit</small></h3>
+    ${S.organs.map((o, i) => { const L = limOf(o); return `<div class="organ ${o.on?"":"off"}">
+      <div class="head"><input data-o="${i}" data-f="n" value="${esc(o.n)}" placeholder="Organ name" style="font-weight:700">
+        <label class="switch"><input type="checkbox" data-o="${i}" data-f="on" ${o.on?"checked":""} aria-label="Include ${esc(o.n)}"><span></span></label></div>
+      <div class="row" style="grid-template-columns:1fr 1.2fr 1.2fr">
+        <label class="f">α/β (Gy)<input data-o="${i}" data-f="ab" value="${esc(o.ab)}" inputmode="decimal"></label>
+        <label class="f">Metric<select data-o="${i}" data-f="m">${METRICS.map(x=>`<option${x===o.m?" selected":""}>${x}</option>`).join("")}</select></label>
+        <label class="f">Limit (Gy)<input data-o="${i}" data-f="limS" value="${Number.isFinite(L) ? L : ""}" inputmode="decimal" placeholder="none"></label>
+      </div>${o.note ? `<p class="note">${esc(o.note)}</p>` : ""}</div>`; }).join("")}
+    <button type="button" class="btn" data-act="addOrgan">+ Add organ</button>
+  </div>
+  <div class="actions noprint"><button type="button" class="btn" data-act="example">Load example</button><button type="button" class="btn ghost" data-act="new">New patient</button></div>
+  <div id="newConfirm" hidden class="card"><b>Start a new patient?</b><p class="note">This clears all doses, dates and planning details, and resets the organ list for the selected site.</p>
+    <div class="actions"><button type="button" class="btn primary" data-act="newYes">Clear</button><button type="button" class="btn" data-act="newNo">Keep</button></div></div>`;
+}
+function vCourse(c){
+  const site = CFG[S.site], C = S["c" + c];
+  return `<h2>Course ${c}${c===1?" · previous":" · re-irradiation"}</h2>
+  <p class="lead">Record how the dose was obtained, then enter the fractions and the physical dose to each organ at its metric.</p>
+  <div class="card"><h3>Planning and dose data</h3>
+    <label class="f">Planning system<select data-c="${c}" data-f="tps"><option value="">Select…</option>${P.tps.map(t=>`<option${t===C.tps?" selected":""}>${esc(t)}</option>`).join("")}</select></label>
+    <label class="f">How the OAR doses were obtained<select data-c="${c}" data-f="meth"><option value="">Select…</option>${P.methods.map(t=>`<option${t===C.meth?" selected":""}>${esc(t)}</option>`).join("")}</select></label>
+    <label class="f">Registration / summation software (if used)<input data-c="${c}" data-f="reg" value="${esc(C.reg)}" placeholder="e.g. RayStation DIR, MIM"></label>
+    ${C.meth && C.meth.startsWith("Estimated") ? `<div class="alert warn">ESTRO–EORTC: with no previous plan, assume the prescription dose reached the OAR (conservative).</div>` : ""}
+  </div>
+  <div class="card"><h3>Fractions</h3><div class="row two">
+    <label class="f">${esc(site.comp1)} fractions<input class="big" data-c="${c}" data-f="na" value="${esc(C.na)}" inputmode="numeric" placeholder="n"></label>
+    ${S.boost ? `<label class="f">${esc(site.comp2)} fractions<input class="big" data-c="${c}" data-f="nb" value="${esc(C.nb)}" inputmode="numeric" placeholder="n"></label>` : ""}
+  </div>${S.boost ? `<p class="note">For brachytherapy, enter the summed dose over all fractions.</p>` : ""}</div>
+  ${active().map(([o, i]) => { const e = course(o, c); return `<div class="organ">
+    <div class="head"><span class="name">${esc(o.n)}</span><span class="meta">${esc(o.m)} · α/β ${esc(o.ab)}</span></div>
+    <div class="row two"><label class="f">${esc(site.comp1)} dose (Gy)<input class="big" data-o="${i}" data-f="a${c}" value="${esc(o["a"+c])}" inputmode="decimal" placeholder="–"></label>
+    ${S.boost ? `<label class="f">${esc(site.comp2)} dose (Gy)<input class="big" data-o="${i}" data-f="b${c}" value="${esc(o["b"+c])}" inputmode="decimal" placeholder="–"></label>` : ""}</div>
+    <div class="res"><span>EQD2${c===1?"₁":"₂"}</span><b data-live="e${c}-${i}">${f1(e)} Gy</b></div></div>`; }).join("")}`;
+}
+function vRecovery(){
+  const m = months(), any = active().some(([o]) => numv(o.r) > 0), p = proto();
+  return `<h2>Recovery after Course 1</h2><p class="lead">Credit for tissue recovery between courses. Protocol: ${esc(p.label)}.</p>
+  <div class="card slot"><div class="interval"><span>Interval</span><b>${Number.isFinite(m) ? m.toFixed(1) + " months" : "–"}</b></div>
+    ${!Number.isFinite(m) ? `<div class="alert warn">Enter both dates in Setup to see the interval.</div>` : m < 0 ? `<div class="alert bad">Course 2 starts before Course 1 ends. Check the dates.</div>` : m < 6 ? `<div class="alert warn">Under 6 months: recovery credit is normally not applied.</div>` : ""}
+    <div class="alert bad" id="recWarn" ${Number.isFinite(m) && m < 6 && any ? "" : "hidden"}>Recovery credit entered with an interval under 6 months. Justify it or set it to 0 %.</div>
+    <div class="alert bad" id="dblWarn" ${doubleCount() ? "" : "hidden"}>This protocol's limits apply to the full Course 1 dose (any recovery is already allowed for in the limit). Adding recovery here loosens them beyond the source. Set recovery to 0 % or switch to BOC local.</div>
+    <p class="note"><b>UK SABR Consortium 2025 rule:</b> 0 % under 6 months, 30 % for 6–18 months, 50 % over 18 months.${Number.isFinite(m) ? ` For this interval: <b>${ukRule(m)} %</b>.` : ""}</p>
+    <button type="button" class="btn" data-act="ukAll">Apply UK rule to all organs</button>
+  </div>
+  ${active().map(([o, i]) => { const R = calcOrgan(o), ev = recEvidence(o.n); return `<div class="organ">
+    <div class="head"><span class="name">${esc(o.n)}</span><span class="meta">EQD2₁ ${f1(R.e1)} Gy</span></div>
+    ${ev ? `<p class="note">${esc(ev.text)}</p>` : ""}
+    <div class="quick" role="group" aria-label="Recovery for ${esc(o.n)}">${[0,25,30,50].map(q => `<button type="button" data-rq="${i}" data-p="${q}" class="${numv(o.r)===q?"on":""}">${q} %</button>`).join("")}
+      <input data-o="${i}" data-f="r" value="${esc(o.r)}" inputmode="decimal" style="width:84px" aria-label="Recovery percent"></div>
+    <input data-o="${i}" data-f="basis" value="${esc(o.basis)}" placeholder="Basis or reference for this assumption">
+    <div class="res"><span>Residual EQD2₁</span><b data-live="res-${i}">${f1(R.res)} Gy</b></div></div>`; }).join("")}`;
+}
+function vResults(){
+  const list = active().map(([o]) => [o, calcOrgan(o)]).filter(([, R]) => Number.isFinite(R.cum));
+  const cnt = k => list.filter(([, R]) => R.st === k).length;
+  const max = Math.max(1, ...list.map(([, R]) => Math.max(R.nom, R.lim > 0 ? R.lim : 0))) * 1.05;
+  const m = months(), p = proto();
+  const crs = c => { const C = S["c"+c]; return `Course ${c}: ${esc(C.tps || "planning system not recorded")} · ${esc(C.meth || "data method not recorded")}${C.reg ? " · " + esc(C.reg) : ""}`; };
+  return `<h2>Results</h2><p class="lead">${esc(S.name || "Patient")}${S.mrn ? " · " + esc(S.mrn) : ""} · ${esc(CFG[S.site].title)} · interval ${Number.isFinite(m) ? m.toFixed(1) + " months" : "–"}</p>
+  <div class="card"><h3>Protocol <small>${p.refs.map(refShort).join("; ") || "local"}</small></h3><p class="note" style="color:var(--ink)">${esc(p.label)}</p>
+    <p class="note">${crs(1)}<br>${crs(2)}</p>
+    ${doubleCount() ? `<div class="alert bad">Recovery entered although this protocol's limits apply to the full Course 1 dose.</div>` : ""}</div>
+  <div class="summary"><div class="tile ok"><b>${cnt("ok")}</b><span>Within</span></div><div class="tile warn"><b>${cnt("warn")}</b><span>Caution</span></div><div class="tile bad"><b>${cnt("bad")}</b><span>Exceeds</span></div></div>
+  ${list.length ? "" : `<div class="card"><b>No results yet.</b><p class="note">Enter fractions and doses in Course 1 and Course 2.</p></div>`}
+  ${list.sort((a, b) => (numv(b[1].pct) || 0) - (numv(a[1].pct) || 0)).map(([o, R]) => `<div class="rc ${R.st}">
+    <div class="head"><b>${esc(o.n)}</b><span class="pill ${R.st}">${R.lab}${Number.isFinite(R.pct) ? " · " + R.pct.toFixed(0) + " %" : ""}</span></div>
+    <div class="track" role="img" aria-label="${esc(o.n)} cumulative ${f1(R.cum)} Gy"><i class="a" style="width:${R.res / max * 100}%"></i><i class="b" style="width:${R.e2 / max * 100}%"></i>${R.lim > 0 ? `<span class="lim" style="left:${R.lim / max * 100}%"></span>` : ""}</div>
+    <div class="nums"><span>EQD2₁<b>${f1(R.e1)}</b></span><span>After ${R.r} %<b>${f1(R.res)}</b></span><span>EQD2₂<b>${f1(R.e2)}</b></span><span>Cumulative<b>${f1(R.cum)}</b></span></div>
+    <div class="meta" style="font-size:12.5px;color:var(--muted)">Without recovery ${f1(R.nom)} Gy · limit ${R.lim > 0 ? f1(R.lim) + " Gy" : "none"} · ${esc(o.m)}, α/β ${esc(o.ab)}${o.note ? " · " + esc(o.note) : ""}</div></div>`).join("")}
+  <div class="legend"><span><i style="background:var(--c1)"></i>Course 1 after recovery</span><span><i style="background:var(--c2)"></i>Course 2</span><span><i style="background:var(--bad);width:3px"></i>Limit</span></div>
+  <div class="actions noprint"><button type="button" class="btn primary" data-act="copy">Copy summary</button><button type="button" class="btn" data-act="print">Print / PDF</button></div>
+  <p class="note">EQD2 = D × (D/n + α/β) / (2 + α/β), summed over components. Cumulative = EQD2₁ × (1 − recovery) + EQD2₂. Status: within ≤ 90 %, caution 90–100 %, exceeds &gt; 100 % of limit. Results support, and do not replace, clinical and physics review.</p>
+  <p class="foot">${CREDIT}<br>RMS.BOC.RON.PHY.0__ · Rev. 01 · Oct 2026</p>`;
+}
+function vEvidence(){
+  const site = P.sites[S.site], used = new Set(["ESTRO22","ESTRO23","ASTRO24"]);
+  site.protocols.forEach(p => p.refs.forEach(r => used.add(r)));
+  const cell = (v) => v.limS == null ? `<span style="color:var(--muted)">–</span>` : `${v.limS}${v.limL != null ? ` → ${v.limL} <small>(≥${v.cut} mo)</small>` : ""}<br><small>${esc(v.m)} · α/β ${v.ab}</small>`;
+  const prots = site.protocols.filter(p => p.id !== "BOC");
+  return `<h2>Evidence</h2><p class="lead">${S.site === "HN" ? "Head & neck" : "Pelvis"}: cumulative EQD2 limits (Gy) by protocol, recovery evidence, and references.</p>
+  <div class="card"><h3>What the major bodies say</h3>
+    <p class="note" style="color:var(--ink)"><b>ESTRO–EORTC (2022):</b> defines Type 1 / Type 2 re-irradiation and reporting; sum doses as EQD2/BED with relevant α/β; record the source and method of the previous dose; if the previous plan is unavailable, assume the prescription dose reached the OAR. It gives <b>no organ-specific cumulative limits</b>. Survey (2023): the most common minimum interval used is 6–12 months.</p>
+    <p class="note" style="color:var(--ink)"><b>ASTRO:</b> no re-irradiation guideline for these sites; its 2023 education panel summarised the ESTRO–EORTC consensus. The US society guidance used here is the <b>American Radium Society</b> AUC (H&N).</p>
+    <p class="note" style="color:var(--ink)"><b>UK:</b> UK SABR Consortium pelvic re-irradiation guidance (2025) gives the recovery rule. No UK H&N re-irradiation guideline was found.</p></div>
+  <div class="card"><h3>Cumulative limits by protocol</h3><div style="overflow-x:auto"><table style="border-collapse:collapse;font-size:13px;width:100%">
+    <thead><tr><th style="text-align:left;padding:6px;border-bottom:1px solid var(--line)">Organ</th>${prots.map(p => `<th style="text-align:left;padding:6px;border-bottom:1px solid var(--line);min-width:110px">${esc(refShort(p.refs[0]))}${p.id==="NG_D"?" desirable":p.id==="NG_A"?" acceptable":""}</th>`).join("")}</tr></thead>
+    <tbody>${site.organs.map((n, i) => `<tr><td style="padding:6px;border-bottom:1px solid var(--line);font-weight:600">${esc(n)}</td>${prots.map(p => `<td style="padding:6px;border-bottom:1px solid var(--line);vertical-align:top">${cell(p.organs[i])}</td>`).join("")}</tr>`).join("")}</tbody></table></div>
+    <p class="note">“→” = higher limit used once the interval reaches the stated months. “–” = no value in that source.</p></div>
+  <div class="card"><h3>Recovery evidence by organ</h3>${site.recovery.map(r => `<div><b>${esc(r.organ)}</b><p class="note">${esc(r.text)}${r.refs.length ? ` [${r.refs.map(refShort).join("; ")}]` : ""}</p></div>`).join("")}</div>
+  <div class="card"><h3>References</h3>${[...used].map(k => `<p class="note"><b>${esc(refShort(k))}:</b> ${esc(P.refs[k])}</p>`).join("")}</div>
+  <p class="foot">${CREDIT}</p>`;
+}
+
+/* ---------- render & events ---------- */
+function render(){
+  $("steps").innerHTML = STEPS.map((s, i) => `<button type="button" class="chip ${i===S.step?"on":""} ${i<S.step?"done":""}" data-step="${i}">${i+1}. ${s}</button>`).join("");
+  $("main").innerHTML = [vSetup, () => vCourse(1), vRecovery, () => vCourse(2), vResults, vEvidence][S.step]();
+  $("backBtn").style.visibility = S.step === 0 ? "hidden" : "visible";
+  $("nextBtn").textContent = S.step === STEPS.length - 1 ? "Back to setup" : "Next: " + STEPS[S.step + 1];
+  const on = $("steps").querySelector(".on"); if (on && on.scrollIntoView) try { on.scrollIntoView({ inline: "center", block: "nearest" }); } catch (_) {}
+  save();
+}
+function go(n){ S.step = Math.max(0, Math.min(STEPS.length - 1, n)); render(); try { window.scrollTo(0, 0); } catch (_) {} }
+function live(){
+  active().forEach(([o, i]) => { const R = calcOrgan(o);
+    const set = (k, v) => { const el = document.querySelector(`[data-live="${k}"]`); if (el) el.textContent = f1(v) + " Gy"; };
+    set(`e1-${i}`, R.e1); set(`e2-${i}`, R.e2); set(`res-${i}`, R.res); });
+  const w = $("recWarn"); if (w){ const m = months(); w.hidden = !(Number.isFinite(m) && m < 6 && active().some(([o]) => numv(o.r) > 0)); }
+  const d = $("dblWarn"); if (d) d.hidden = !doubleCount();
+  document.querySelectorAll("[data-rq]").forEach(b => b.classList.toggle("on", numv(S.organs[b.dataset.rq].r) === numv(b.dataset.p)));
+  save();
+}
+document.addEventListener("input", e => {
+  const t = e.target, d = t.dataset;
+  if (d.k === "protoSel") return;
+  if (d.k){ S[d.k] = t.type === "checkbox" ? t.checked : t.value; if (d.k === "boost") render(); else live(); return; }
+  if (d.c){ S["c" + d.c][d.f] = t.value; if (d.f === "meth") render(); else live(); return; }
+  if (d.o !== undefined){ const o = S.organs[+d.o];
+    if (d.f === "limS"){ o.limS = t.value; o.limL = null; o.cut = null; o.note = "Edited locally"; }
+    else o[d.f] = t.type === "checkbox" ? t.checked : t.value;
+    if (d.f === "on") t.closest(".organ").classList.toggle("off", !t.checked); live(); }
+});
+document.addEventListener("change", e => {
+  const t = e.target;
+  if (t.dataset.k === "protoSel"){ applyProto(t.value); render(); toast("Protocol applied: limits, α/β, metrics and recovery updated"); return; }
+  if (t.type === "date"){ if (proto().rec === "uk") applyProto(S.proto); render(); }
+});
+document.addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return; const d = b.dataset;
+  if (d.step) return go(+d.step);
+  if (d.site){ if (d.site !== S.site){ freshState(d.site); render(); toast((d.site === "HN" ? "Head & neck" : "Pelvis") + " organ list loaded"); } return; }
+  if (d.rq !== undefined){ S.organs[+d.rq].r = +d.p; const inp = document.querySelector(`[data-o="${d.rq}"][data-f="r"]`); if (inp) inp.value = d.p; live(); return; }
+  const act = d.act;
+  if (act === "ukAll"){ const q = ukRule(months()); active().forEach(([o]) => { o.r = q; o.basis = `UK SABR 2025 rule (${q}% for ${f1(months())} mo)`; }); render(); toast(`UK rule applied: ${q} %`); }
+  if (act === "addOrgan"){ S.organs.push(blankOrgan("")); render(); const ins = document.querySelectorAll('[data-f="n"]'); ins[ins.length - 1].focus(); }
+  if (act === "example"){ exampleState(S.site); render(); toast("Example case loaded"); }
+  if (act === "new"){ $("newConfirm").hidden = false; $("newConfirm").scrollIntoView({ block: "center" }); }
+  if (act === "newNo") $("newConfirm").hidden = true;
+  if (act === "newYes"){ freshState(S.site); render(); toast("New patient"); }
+  if (act === "copy") copySummary();
+  if (act === "print") window.print();
+});
+$("backBtn").onclick = () => go(S.step - 1);
+$("nextBtn").onclick = () => go(S.step === STEPS.length - 1 ? 0 : S.step + 1);
+
+function toast(t){ const el = $("toast"); el.textContent = t; el.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => el.hidden = true, 2400); }
+function copySummary(){
+  const m = months(), site = CFG[S.site], p = proto();
+  const crs = c => { const C = S["c"+c]; return `Course ${c}: TPS ${C.tps || "–"}; dose data ${C.meth || "–"}${C.reg ? "; software " + C.reg : ""}; fractions ${site.comp1} ${C.na || "–"}${S.boost ? `, ${site.comp2} ${C.nb || "–"}` : ""}`; };
+  let s = `BOC ${site.title.toUpperCase()} – CUMULATIVE EQD2\n${CREDIT}\nPatient: ${S.name} | MRN: ${S.mrn}\nCourse 1 ended ${S.c1end || "–"}; Course 2 starts ${S.c2start || "–"}; interval ${Number.isFinite(m) ? m.toFixed(1) + " months" : "–"}\n`;
+  s += `Protocol: ${p.label}${p.refs.length ? " [" + p.refs.map(k => P.refs[k]).join(" | ") + "]" : ""}\n${crs(1)}\n${crs(2)}\n\n`;
+  active().forEach(([o]) => { const R = calcOrgan(o); if (!Number.isFinite(R.cum)) return;
+    s += `${o.n} [${o.m}, α/β ${o.ab}]: EQD2₁ ${f1(R.e1)} → ${f1(R.res)} Gy after ${R.r}% recovery${o.basis ? " (" + o.basis + ")" : ""}; EQD2₂ ${f1(R.e2)} Gy; cumulative ${f1(R.cum)} Gy (no recovery ${f1(R.nom)}); limit ${R.lim > 0 ? f1(R.lim) + " Gy" : "–"}${o.note ? " (" + o.note + ")" : ""} – ${R.lab}${Number.isFinite(R.pct) ? " " + R.pct.toFixed(0) + "%" : ""}\n`; });
+  if (doubleCount()) s += "\nWARNING: recovery entered although this protocol's limits apply to the full Course 1 dose.\n";
+  const fallback = () => { const ta = document.createElement("textarea"); ta.value = s; ta.rows = 10; ta.className = "noprint"; $("main").appendChild(ta); ta.focus(); ta.select(); toast("Selected below. Copy it from there."); };
+  if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(s).then(() => toast("Summary copied"), fallback); else fallback();
+}
+render();
+(function(){
+  const ios=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+  const standalone=window.navigator.standalone===true||matchMedia("(display-mode: standalone)").matches;
+  let dismissed=false; try{dismissed=localStorage.getItem("boc-ios-hint")==="1";}catch(_){}
+  if(ios&&!standalone&&!dismissed) $("iosHint").hidden=false;
+  $("iosHintX").onclick=()=>{$("iosHint").hidden=true;try{localStorage.setItem("boc-ios-hint","1");}catch(_){}};
+})();
+if("serviceWorker" in navigator && (location.protocol==="https:"||location.hostname==="localhost")){
+  window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+}
+</script>
+</body>
+</html>
