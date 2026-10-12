@@ -51,7 +51,7 @@ label.f{display:grid;gap:4px;font-size:13px;color:var(--muted);min-width:0}
 input,select,textarea{font:inherit;font-size:16px;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px 11px;width:100%;min-width:0}
 input:focus,select:focus,textarea:focus{outline:2px solid var(--gold);outline-offset:0;border-color:var(--gold)}
 input.big{font-size:20px;font-weight:700;text-align:center;padding:10px 6px;font-variant-numeric:tabular-nums}
-.seg{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--gold);border-radius:10px;overflow:hidden}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--gold);border-radius:10px;overflow:hidden}
 .seg button{border:0;background:var(--card);color:var(--ink);padding:12px;font:inherit;font-weight:600;cursor:pointer}
 .seg button.on{background:var(--gold);color:var(--gold-ink)}
 .toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:15px}
@@ -132,7 +132,7 @@ input.big{font-size:20px;font-weight:700;text-align:center;padding:10px 6px;font
 <div class="toast" id="toast" hidden></div>
 
 <script>
-const CFG = {"HN": {"title": "Head & Neck Re-irradiation", "comp1": "Phase 1", "comp2": "Boost / phase 2", "abnote": "CNS, optic structures and nerves 2 Gy; vessels, bone and larynx 3 Gy (confirm per BOC policy).", "recnote": "Partial credit only for CNS structures (spinal cord, brainstem) where literature supports it. No credit for vessels, peripheral nerves, bone, mucosa or larynx unless specifically justified. Spinal cord: Nieder et al., IJROBP 2005: low myelopathy risk with cumulative BED ≤ 135.5 Gy₂ (EQD2 ≈ 67.8 Gy), interval ≥ 6 months and no single course > 98 Gy₂.", "organs": [{"n": "Spinal cord", "ab": 2, "m": "D0.03cc", "lim": 67.8, "rdef": 0.25}, {"n": "Brainstem", "ab": 2, "m": "D0.03cc", "lim": 75, "rdef": 0.25}, {"n": "Optic chiasm", "ab": 2, "m": "D0.03cc", "lim": 65, "rdef": 0}, {"n": "Temporal lobe (L)", "ab": 2, "m": "D1cc", "lim": 90, "rdef": 0}, {"n": "Carotid artery (L)", "ab": 3, "m": "Dmax", "lim": 120, "rdef": 0}, {"n": "Brachial plexus (L)", "ab": 2, "m": "D0.03cc", "lim": 95, "rdef": 0}, {"n": "Mandible", "ab": 3, "m": "D1cc", "lim": 110, "rdef": 0}, {"n": "Larynx", "ab": 3, "m": "Dmean", "lim": 80, "rdef": 0}], "ex": {"p": {"name": "Example Patient", "mrn": "000000", "dx": "Recurrent SCC, left oropharynx", "c1rx": "70 Gy / 35 fx VMAT", "c2rx": "60 Gy / 30 fx VMAT"}, "c1end": "2023-06-20", "c2start": "2026-10-26", "organs": [{"n": "Spinal cord", "ab": 2, "m": "D0.03cc", "a1": [44, 35], "b1": [null, null], "r": 0.25, "a2": [20, 30], "b2": [null, null], "lim": 67.8, "basis": "Recovery: interval > 24 mo, CNS (Nieder 2005). Constraint: cumulative BED 135.5 Gy₂"}, {"n": "Brainstem", "ab": 2, "m": "D0.03cc", "a1": [48, 35], "b1": [null, null], "r": 0.25, "a2": [14, 30], "b2": [null, null], "lim": 75, "basis": "Recovery: conservative CNS credit. Constraint: example – confirm BOC policy"}, {"n": "Optic chiasm", "ab": 2, "m": "D0.03cc", "a1": [30, 35], "b1": [null, null], "r": 0, "a2": [8, 30], "b2": [null, null], "lim": 65, "basis": "No recovery assumed. Constraint: example – confirm BOC policy"}, {"n": "Temporal lobe (L)", "ab": 2, "m": "D1cc", "a1": [22, 35], "b1": [null, null], "r": 0, "a2": [10, 30], "b2": [null, null], "lim": 90, "basis": "No recovery assumed. Constraint: example – confirm BOC policy"}, {"n": "Carotid artery (L)", "ab": 3, "m": "Dmax", "a1": [70, 35], "b1": [null, null], "r": 0, "a2": [54, 30], "b2": [null, null], "lim": 120, "basis": "No recovery for large vessels. Constraint: example – confirm BOC policy"}, {"n": "Brachial plexus (L)", "ab": 2, "m": "D0.03cc", "a1": [60, 35], "b1": [null, null], "r": 0, "a2": [30, 30], "b2": [null, null], "lim": 95, "basis": "No recovery for peripheral nerve. Constraint: example – confirm BOC policy"}, {"n": "Mandible", "ab": 3, "m": "D1cc", "a1": [66, 35], "b1": [null, null], "r": 0, "a2": [40, 30], "b2": [null, null], "lim": 110, "basis": "No recovery for bone. Constraint: example – confirm BOC policy"}, {"n": "Larynx", "ab": 3, "m": "Dmean", "a1": [45, 35], "b1": [null, null], "r": 0, "a2": [30, 30], "b2": [null, null], "lim": 80, "basis": "No recovery assumed. Constraint: example – confirm BOC policy"}]}}, "PEL": {"title": "Pelvic Re-irradiation", "comp1": "EBRT", "comp2": "Brachy / boost", "abnote": "Rectum, bladder, bowel, vagina and bone 3 Gy; sacral plexus and cauda equina 2 Gy (confirm per BOC policy). For brachytherapy, enter the summed D2cc over all fractions and the number of fractions.", "recnote": "Evidence for meaningful long-term recovery of rectum, bladder, sigmoid, small bowel and vagina is limited; most re-irradiation series assume none. Sacral plexus and cauda equina: no credit unless specifically justified. Any credit applied must be stated with its source.", "organs": [{"n": "Rectum", "ab": 3, "m": "D2cc", "lim": 100, "rdef": 0}, {"n": "Bladder", "ab": 3, "m": "D2cc", "lim": 120, "rdef": 0}, {"n": "Sigmoid colon", "ab": 3, "m": "D2cc", "lim": 100, "rdef": 0}, {"n": "Small bowel", "ab": 3, "m": "D2cc", "lim": 90, "rdef": 0}, {"n": "Vagina", "ab": 3, "m": "D2cc", "lim": 130, "rdef": 0}, {"n": "Sacral plexus", "ab": 2, "m": "D0.03cc", "lim": 80, "rdef": 0}, {"n": "Cauda equina", "ab": 2, "m": "D0.03cc", "lim": 75, "rdef": 0}, {"n": "Femoral head (L)", "ab": 3, "m": "Dmax", "lim": 70, "rdef": 0}], "ex": {"p": {"name": "Example Patient", "mrn": "000000", "dx": "Central recurrence, carcinoma cervix", "c1rx": "EBRT 45 Gy / 25 fx + HDR 7 Gy x 4", "c2rx": "Interstitial HDR 6 Gy x 5"}, "c1end": "2022-03-15", "c2start": "2026-10-28", "organs": [{"n": "Rectum", "ab": 3, "m": "D2cc", "a1": [45, 25], "b1": [14, 4], "r": 0, "a2": [null, null], "b2": [14, 5], "lim": 100, "basis": "No recovery assumed for rectum. Constraint: example – confirm BOC policy"}, {"n": "Bladder", "ab": 3, "m": "D2cc", "a1": [45, 25], "b1": [20, 4], "r": 0, "a2": [null, null], "b2": [16, 5], "lim": 120, "basis": "No recovery assumed for bladder. Constraint: example – confirm BOC policy"}, {"n": "Sigmoid colon", "ab": 3, "m": "D2cc", "a1": [45, 25], "b1": [16, 4], "r": 0, "a2": [null, null], "b2": [12.5, 5], "lim": 100, "basis": "No recovery assumed for bowel. Constraint: example – confirm BOC policy"}, {"n": "Small bowel", "ab": 3, "m": "D2cc", "a1": [45, 25], "b1": [12, 4], "r": 0, "a2": [null, null], "b2": [10, 5], "lim": 90, "basis": "No recovery assumed for bowel. Constraint: example – confirm BOC policy"}, {"n": "Vagina", "ab": 3, "m": "D2cc", "a1": [45, 25], "b1": [28, 4], "r": 0, "a2": [null, null], "b2": [20, 5], "lim": 130, "basis": "No recovery assumed. Fistula risk. Constraint: example – confirm BOC policy"}, {"n": "Sacral plexus", "ab": 2, "m": "D0.03cc", "a1": [46, 25], "b1": [4, 4], "r": 0, "a2": [null, null], "b2": [5, 5], "lim": 80, "basis": "No recovery for peripheral nerve. Constraint: example – confirm BOC policy"}, {"n": "Cauda equina", "ab": 2, "m": "D0.03cc", "a1": [40, 25], "b1": [null, null], "r": 0, "a2": [null, null], "b2": [null, null], "lim": 75, "basis": "Outside Course 2 volume. Constraint: example – confirm BOC policy"}, {"n": "Femoral head (L)", "ab": 3, "m": "Dmax", "a1": [40, 25], "b1": [null, null], "r": 0, "a2": [null, null], "b2": [null, null], "lim": 70, "basis": "Outside Course 2 volume. Constraint: example – confirm BOC policy"}]}}};
+const CFG = {"HN": {"title": "Head & Neck Re-irradiation", "comp1": "Phase 1", "comp2": "Boost / phase 2", "abnote": "CNS, optic structures and nerves 2 Gy; vessels, bone and larynx 3 Gy (confirm per BOC policy).", "recnote": "Partial credit only for CNS structures (spinal cord, brainstem) where literature supports it. No credit for vessels, peripheral nerves, bone, mucosa or larynx unless specifically justified. Spinal cord: Nieder et al., IJROBP 2005: low myelopathy risk with cumulative BED ≤ 135.5 Gy₂ (EQD2 ≈ 67.8 Gy), interval ≥ 6 months and no single course > 98 Gy₂.", "organs": [{"n": "Spinal cord", "ab": 2, "m": "D0.03cc", "lim": 67.8, "rdef": 0.25}, {"n": "Brainstem", "ab": 2, "m": "D0.03cc", "lim": 75, "rdef": 0.25}, {"n": "Optic chiasm", "ab": 2, "m": "D0.03cc", "lim": 65, "rdef": 0}, {"n": "Temporal lobe (L)", "ab": 2, "m": "D1cc", "lim": 90, "rdef": 0}, {"n": "Carotid artery (L)", "ab": 3, "m": "Dmax", "lim": 120, "rdef": 0}, {"n": "Brachial plexus (L)", "ab": 2, "m": "D0.03cc", "lim": 95, "rdef": 0}, {"n": "Mandible", "ab": 3, "m": "D1cc", "lim": 110, "rdef": 0}, {"n": "Larynx", "ab": 3, "m": "Dmean", "lim": 80, "rdef": 0}], "ex": {"p": {"name": "Example Patient", "mrn": "000000", "dx": "Recurrent SCC, left oropharynx", "c1rx": "70 Gy / 35 fx VMAT", "c2rx": "60 Gy / 30 fx VMAT"}, "c1end": "2023-06-20", "c2start": "2026-10-26", "organs": [{"n": "Spinal cord", "ab": 2, "m": "D0.03cc", "a1": [44, 35], "b1": [null, null], "r": 0.25, "a2": [20, 30], "b2": [null, null], "lim": 67.8, "basis": "Recovery: interval > 24 mo, CNS (Nieder 2005). Constraint: cumulative BED 135.5 Gy₂"}, {"n": "Brainstem", "ab": 2, "m": "D0.03cc", "a1": [48, 35], "b1": [null, null], "r": 0.25, "a2": [14, 30], "b2": [null, null], "lim": 75, "basis": "Recovery: conservative CNS credit. Constraint: example – confirm BOC policy"}, {"n": "Optic chiasm", "ab": 2, "m": "D0.03cc", "a1": [30, 35], "b1": [null, null], "r": 0, "a2": [8, 30], "b2": [null, null], "lim": 65, "basis": "No recovery assumed. Constraint: example – confirm BOC policy"}, {"n": "Temporal lobe (L)", "ab": 2, "m": "D1cc", "a1": [22, 35], "b1": [null, null], "r": 0, "a2": [10, 30], "b2": [null, null], "lim": 90, "basis": "No recovery assumed. Constraint: example – confirm BOC policy"}, {"n": "Carotid artery (L)", "ab": 3, "m": "Dmax", "a1": [70, 35], "b1": [null, null], "r": 0, "a2": [54, 30], "b2": [null, null], "lim": 120, "basis": "No recovery for large vessels. Constraint: example – confirm BOC policy"}, {"n": "Brachial plexus (L)", "ab": 2, "m": "D0.03cc", "a1": [60, 35], "b1": [null, null], "r": 0, "a2": [30, 30], "b2": [null, null], "lim": 95, "basis": "No recovery for peripheral nerve. Constraint: example – confirm BOC policy"}, {"n": "Mandible", "ab": 3, "m": "D1cc", "a1": [66, 35], "b1": [null, null], "r": 0, "a2": [40, 30], "b2": [null, null], "lim": 110, "basis": "No recovery for bone. Constraint: example – confirm BOC policy"}, {"n": "Larynx", "ab": 3, "m": "Dmean", "a1": [45, 35], "b1": [null, null], "r": 0, "a2": [30, 30], "b2": [null, null], "lim": 80, "basis": "No recovery assumed. Constraint: example – confirm BOC policy"}]}}, "CNS": {"title": "CNS Re-irradiation", "comp1": "Phase 1", "comp2": "Boost / SRS", "abnote": "ESTRO/EANO 2025 recommends EQD2 with α/β 3 Gy; most cumulative limits in the literature use α/β 2 Gy.", "recnote": "ESTRO/EANO 2025: recovery only for brain and spinal cord; none for brainstem or optic structures.", "organs": [{"n": "Brain", "ab": 2, "m": "D1cc", "lim": 100, "rdef": 0}, {"n": "Brainstem", "ab": 2, "m": "D0.03cc", "lim": 100, "rdef": 0}, {"n": "Optic chiasm", "ab": 2, "m": "D0.03cc", "lim": 75, "rdef": 0}, {"n": "Optic nerves", "ab": 2, "m": "D0.03cc", "lim": 75, "rdef": 0}, {"n": "Spinal cord", "ab": 2, "m": "D0.03cc", "lim": 67.8, "rdef": 0.25}], "ex": {"p": {"name": "Example Patient", "mrn": "000000", "dx": "Recurrent glioblastoma, right frontal", "c1rx": "60 Gy / 30 fx VMAT", "c2rx": "35 Gy / 10 fx VMAT"}, "c1end": "2024-03-10", "c2start": "2026-10-28", "organs": [{"n": "Brain", "ab": 2, "m": "D1cc", "a1": [60, 30], "b1": [null, null], "r": 0, "a2": [30, 10], "b2": [null, null], "lim": 100, "basis": "No recovery assumed. Limit: Mayer & Sminia (necrosis above 100 Gy₂ cumulative)"}, {"n": "Brainstem", "ab": 2, "m": "D0.03cc", "a1": [45, 30], "b1": [null, null], "r": 0, "a2": [15, 10], "b2": [null, null], "lim": 100, "basis": "No recovery assumed (ESTRO/EANO: no consensus for brainstem)"}, {"n": "Optic chiasm", "ab": 2, "m": "D0.03cc", "a1": [50, 30], "b1": [null, null], "r": 0, "a2": [12, 10], "b2": [null, null], "lim": 75, "basis": "No recovery assumed (recovery uncertain)"}, {"n": "Optic nerves", "ab": 2, "m": "D0.03cc", "a1": [40, 30], "b1": [null, null], "r": 0, "a2": [10, 10], "b2": [null, null], "lim": 75, "basis": "No recovery assumed (recovery uncertain)"}, {"n": "Spinal cord", "ab": 2, "m": "D0.03cc", "a1": [20, 30], "b1": [null, null], "r": 0.25, "a2": [3, 10], "b2": [null, null], "lim": 67.8, "basis": "≥25% after 6 mo (ESTRO/EANO intro); Nieder limit"}]}}, "PEL": {"title": "Pelvic Re-irradiation", "comp1": "EBRT", "comp2": "Brachy / boost", "abnote": "Rectum, bladder, bowel, vagina and bone 3 Gy; sacral plexus and cauda equina 2 Gy (confirm per BOC policy). For brachytherapy, enter the summed D2cc over all fractions and the number of fractions.", "recnote": "Evidence for meaningful long-term recovery of rectum, bladder, sigmoid, small bowel and vagina is limited; most re-irradiation series assume none. Sacral plexus and cauda equina: no credit unless specifically justified. Any credit applied must be stated with its source.", "organs": [{"n": "Rectum", "ab": 3, "m": "D2cc", "lim": 100, "rdef": 0}, {"n": "Bladder", "ab": 3, "m": "D2cc", "lim": 120, "rdef": 0}, {"n": "Sigmoid colon", "ab": 3, "m": "D2cc", "lim": 100, "rdef": 0}, {"n": "Small bowel", "ab": 3, "m": "D2cc", "lim": 90, "rdef": 0}, {"n": "Vagina", "ab": 3, "m": "D2cc", "lim": 130, "rdef": 0}, {"n": "Sacral plexus", "ab": 2, "m": "D0.03cc", "lim": 80, "rdef": 0}, {"n": "Cauda equina", "ab": 2, "m": "D0.03cc", "lim": 75, "rdef": 0}, {"n": "Femoral head (L)", "ab": 3, "m": "Dmax", "lim": 70, "rdef": 0}], "ex": {"p": {"name": "Example Patient", "mrn": "000000", "dx": "Central recurrence, carcinoma cervix", "c1rx": "EBRT 45 Gy / 25 fx + HDR 7 Gy x 4", "c2rx": "Interstitial HDR 6 Gy x 5"}, "c1end": "2022-03-15", "c2start": "2026-10-28", "organs": [{"n": "Rectum", "ab": 3, "m": "D2cc", "a1": [45, 25], "b1": [14, 4], "r": 0, "a2": [null, null], "b2": [14, 5], "lim": 100, "basis": "No recovery assumed for rectum. Constraint: example – confirm BOC policy"}, {"n": "Bladder", "ab": 3, "m": "D2cc", "a1": [45, 25], "b1": [20, 4], "r": 0, "a2": [null, null], "b2": [16, 5], "lim": 120, "basis": "No recovery assumed for bladder. Constraint: example – confirm BOC policy"}, {"n": "Sigmoid colon", "ab": 3, "m": "D2cc", "a1": [45, 25], "b1": [16, 4], "r": 0, "a2": [null, null], "b2": [12.5, 5], "lim": 100, "basis": "No recovery assumed for bowel. Constraint: example – confirm BOC policy"}, {"n": "Small bowel", "ab": 3, "m": "D2cc", "a1": [45, 25], "b1": [12, 4], "r": 0, "a2": [null, null], "b2": [10, 5], "lim": 90, "basis": "No recovery assumed for bowel. Constraint: example – confirm BOC policy"}, {"n": "Vagina", "ab": 3, "m": "D2cc", "a1": [45, 25], "b1": [28, 4], "r": 0, "a2": [null, null], "b2": [20, 5], "lim": 130, "basis": "No recovery assumed. Fistula risk. Constraint: example – confirm BOC policy"}, {"n": "Sacral plexus", "ab": 2, "m": "D0.03cc", "a1": [46, 25], "b1": [4, 4], "r": 0, "a2": [null, null], "b2": [5, 5], "lim": 80, "basis": "No recovery for peripheral nerve. Constraint: example – confirm BOC policy"}, {"n": "Cauda equina", "ab": 2, "m": "D0.03cc", "a1": [40, 25], "b1": [null, null], "r": 0, "a2": [null, null], "b2": [null, null], "lim": 75, "basis": "Outside Course 2 volume. Constraint: example – confirm BOC policy"}, {"n": "Femoral head (L)", "ab": 3, "m": "Dmax", "a1": [40, 25], "b1": [null, null], "r": 0, "a2": [null, null], "b2": [null, null], "lim": 70, "basis": "Outside Course 2 volume. Constraint: example – confirm BOC policy"}]}}};
 const P = {
  "refs": {
   "ESTRO22": "Andratschke N, Willmann J, Appelt AL, et al. ESTRO–EORTC consensus on re-irradiation: definition, reporting, and clinical decision making. Lancet Oncol 2022;23:e469–e478.",
@@ -143,7 +143,10 @@ const P = {
   "NIEDER": "Nieder C, Grosu AL, Andratschke NH, Molls M. Proposal of human spinal cord reirradiation dose based on collection of data from 40 patients. Int J Radiat Oncol Biol Phys 2005;61:851–855; and update (38 patients), Int J Radiat Oncol Biol Phys 2006;66:1446–1449.",
   "SLEVIN21": "Slevin F, Aitken K, Alongi F, et al. An international Delphi consensus for pelvic stereotactic ablative radiotherapy re-irradiation. Radiother Oncol 2021;164:104–114.",
   "UKSABR25": "Moreno-Olmedo E, Owczarczyk K, Chadwick E, et al. Pelvic SABR re-irradiation: UK SABR Consortium guidance for use in routine clinical care. Tech Innov Patient Support Radiat Oncol 2025;35:100326.",
-  "FAUNDEZ26": "Faundez J, Schananier C, Villegas C, Retamales J. Brachytherapy reirradiation for local recurrences of gynaecological cancers: two clinical cases, literature review and OAR constraints. ecancer 2026;20:2091 (Table 1, citing Zolciak-Siwinska et al. and Abusaris et al.)."
+  "FAUNDEZ26": "Faundez J, Schananier C, Villegas C, Retamales J. Brachytherapy reirradiation for local recurrences of gynaecological cancers: two clinical cases, literature review and OAR constraints. ecancer 2026;20:2091 (Table 1, citing Zolciak-Siwinska et al. and Abusaris et al.).",
+  "EANO25": "Andratschke N, Heusel A, Albert NL, et al. ESTRO/EANO recommendation on reirradiation of glioblastoma. Radiother Oncol 2025;204:110696.",
+  "MAYER08": "Mayer R, Sminia P. Reirradiation tolerance of the human brain. Int J Radiat Oncol Biol Phys 2008;70(5):1350–1360.",
+  "RADES24": "Rades D, et al. Reirradiation of metastases of the central nervous system: part 1—brain metastasis. Ann Palliat Med 2024 (summarising Stiefel et al.: cumulative EQD2 brain ≤100–120 Gy₂, brainstem <100 Gy₂, chiasm/optic nerves <75 Gy₂)."
  },
  "tps": [
   "Monaco",
@@ -554,6 +557,324 @@ const P = {
     }
    ]
   },
+  "CNS": {
+   "organs": [
+    "Brain",
+    "Brainstem",
+    "Optic chiasm",
+    "Optic nerves",
+    "Spinal cord"
+   ],
+   "recovery": [
+    {
+     "organ": "Brain",
+     "text": "ESTRO/EANO 2025: recovery may be considered only for brain and spinal cord (low evidence) · Mayer & Sminia: necrosis above 100 Gy₂ cumulative · Ng 2021: temporal lobe lifetime 130–150%",
+     "refs": [
+      "EANO25",
+      "MAYER08",
+      "NG21"
+     ]
+    },
+    {
+     "organ": "Brainstem",
+     "text": "ESTRO/EANO 2025: no consensus on recovery · Ng 2021: lifetime 130–150% · ARS/CARE: 60→78 Gy after 2 y",
+     "refs": [
+      "EANO25",
+      "NG21",
+      "ARS22"
+     ]
+    },
+    {
+     "organ": "Optic chiasm / nerves",
+     "text": "ESTRO/EANO 2025: recovery uncertain – assess cumulative dose carefully (no credit advised) · ARS/CARE: 54→64.8 Gy after 2 y",
+     "refs": [
+      "EANO25",
+      "ARS22"
+     ]
+    },
+    {
+     "organ": "Spinal cord",
+     "text": "ESTRO/EANO 2025: tolerance appears to rise ≥25% by 6 months · Nieder: BED ≤135.5 Gy₂ with interval ≥6 mo · Ng 2021: ≈50% after ≥1 y",
+     "refs": [
+      "EANO25",
+      "NIEDER",
+      "NG21"
+     ]
+    }
+   ],
+   "protocols": [
+    {
+     "id": "BOC",
+     "label": "BOC local (editable)",
+     "refs": [
+      "MAYER08",
+      "RADES24",
+      "NIEDER"
+     ],
+     "rec": "local",
+     "desc": "Departmental working values built from Mayer & Sminia (brain), Stiefel et al. (brainstem, optic) and Nieder (spinal cord). Confirm before clinical use.",
+     "recdef": [
+      0,
+      0,
+      0,
+      0,
+      25
+     ],
+     "organs": [
+      {
+       "ab": 2,
+       "m": "D1cc",
+       "limS": 100,
+       "limL": null,
+       "cut": null,
+       "note": "Mayer & Sminia: necrosis above 100 Gy₂ cumulative"
+      },
+      {
+       "ab": 2,
+       "m": "D0.03cc",
+       "limS": 100,
+       "limL": null,
+       "cut": null,
+       "note": "Stiefel et al.: <100 Gy₂ cumulative"
+      },
+      {
+       "ab": 2,
+       "m": "D0.03cc",
+       "limS": 75,
+       "limL": null,
+       "cut": null,
+       "note": "Stiefel et al.: <75 Gy₂ cumulative"
+      },
+      {
+       "ab": 2,
+       "m": "D0.03cc",
+       "limS": 75,
+       "limL": null,
+       "cut": null,
+       "note": "Stiefel et al.: <75 Gy₂ cumulative"
+      },
+      {
+       "ab": 2,
+       "m": "D0.03cc",
+       "limS": 67.8,
+       "limL": null,
+       "cut": null,
+       "note": "Nieder: cumulative BED ≤135.5 Gy₂, interval ≥6 mo"
+      }
+     ]
+    },
+    {
+     "id": "LIT",
+     "label": "Brain re-RT literature (Mayer 2008; Stiefel via Rades 2024)",
+     "refs": [
+      "MAYER08",
+      "RADES24",
+      "NIEDER"
+     ],
+     "rec": "built-in",
+     "desc": "Cumulative limits from re-irradiation series (α/β 2). Limits apply to the full Course 1 dose. Spinal cord from Nieder.",
+     "recdef": null,
+     "organs": [
+      {
+       "ab": 2,
+       "m": "D1cc",
+       "limS": 100,
+       "limL": null,
+       "cut": null,
+       "note": "Mayer & Sminia: necrosis above 100 Gy₂; Stiefel: ≤100–120 Gy₂ may be safe"
+      },
+      {
+       "ab": 2,
+       "m": "D0.03cc",
+       "limS": 100,
+       "limL": null,
+       "cut": null,
+       "note": "Stiefel et al.: <100 Gy₂"
+      },
+      {
+       "ab": 2,
+       "m": "D0.03cc",
+       "limS": 75,
+       "limL": null,
+       "cut": null,
+       "note": "Stiefel et al.: <75 Gy₂"
+      },
+      {
+       "ab": 2,
+       "m": "D0.03cc",
+       "limS": 75,
+       "limL": null,
+       "cut": null,
+       "note": "Stiefel et al.: <75 Gy₂"
+      },
+      {
+       "ab": 2,
+       "m": "D0.03cc",
+       "limS": 67.8,
+       "limL": null,
+       "cut": null,
+       "note": "Nieder: BED ≤135.5 Gy₂ (EQD2 ≈67.8 Gy), interval ≥6 mo"
+      }
+     ]
+    },
+    {
+     "id": "NG_D",
+     "label": "International NPC consensus – desirable (Ng 2021)",
+     "refs": [
+      "NG21"
+     ],
+     "rec": "built-in",
+     "desc": "Skull-base consensus: lifetime limits = 130% of single-course tolerance. Brain value is the temporal lobe limit.",
+     "recdef": null,
+     "organs": [
+      {
+       "ab": 2,
+       "m": "D0.03cc",
+       "limS": 91,
+       "limL": null,
+       "cut": null,
+       "note": "Temporal lobe: 130% of 70 Gy"
+      },
+      {
+       "ab": 2,
+       "m": "D0.03cc",
+       "limS": 70.2,
+       "limL": null,
+       "cut": null,
+       "note": "130% of 54 Gy"
+      },
+      {
+       "ab": 2,
+       "m": "D0.03cc",
+       "limS": 70.2,
+       "limL": null,
+       "cut": null,
+       "note": "130% of 54 Gy"
+      },
+      {
+       "ab": 2,
+       "m": "D0.03cc",
+       "limS": 70.2,
+       "limL": null,
+       "cut": null,
+       "note": "130% of 54 Gy (bilateral)"
+      },
+      {
+       "ab": 2,
+       "m": "D0.03cc",
+       "limS": 58.5,
+       "limL": null,
+       "cut": null,
+       "note": "130% of 45 Gy"
+      }
+     ]
+    },
+    {
+     "id": "NG_A",
+     "label": "International NPC consensus – acceptable (Ng 2021)",
+     "refs": [
+      "NG21"
+     ],
+     "rec": "built-in",
+     "desc": "Skull-base consensus: lifetime limits = 150% of single-course tolerance. Brain value is the temporal lobe limit.",
+     "recdef": null,
+     "organs": [
+      {
+       "ab": 2,
+       "m": "D0.03cc",
+       "limS": 105,
+       "limL": null,
+       "cut": null,
+       "note": "Temporal lobe: 150% of 70 Gy"
+      },
+      {
+       "ab": 2,
+       "m": "D0.03cc",
+       "limS": 81,
+       "limL": null,
+       "cut": null,
+       "note": "150% of 54 Gy"
+      },
+      {
+       "ab": 2,
+       "m": "D0.03cc",
+       "limS": 81,
+       "limL": null,
+       "cut": null,
+       "note": "150% of 54 Gy (moderate consensus)"
+      },
+      {
+       "ab": 2,
+       "m": "D0.03cc",
+       "limS": 81,
+       "limL": null,
+       "cut": null,
+       "note": "150% of 54 Gy (bilateral)"
+      },
+      {
+       "ab": 2,
+       "m": "D0.03cc",
+       "limS": 67.5,
+       "limL": null,
+       "cut": null,
+       "note": "150% of 45 Gy"
+      }
+     ]
+    },
+    {
+     "id": "ARS",
+     "label": "US – ARS / CARE protocol limits (Ward 2022)",
+     "refs": [
+      "ARS22"
+     ],
+     "rec": "built-in",
+     "desc": "Interval-dependent cumulative limits from the CARE protocol in ARS Table 2 (<2 y vs ≥2 y). No brain limit given.",
+     "recdef": null,
+     "organs": [
+      {
+       "ab": 2,
+       "m": "Dmax",
+       "limS": null,
+       "limL": null,
+       "cut": null,
+       "note": "No brain limit in ARS table"
+      },
+      {
+       "ab": 2,
+       "m": "Dmax",
+       "limS": 60,
+       "limL": 78,
+       "cut": 24,
+       "note": "CARE: 60 Gy <2 y, 78 Gy ≥2 y"
+      },
+      {
+       "ab": 3,
+       "m": "Dmax",
+       "limS": 54,
+       "limL": 64.8,
+       "cut": 24,
+       "note": "CARE: 54 Gy <2 y, 64.8 Gy ≥2 y (α/β 3)"
+      },
+      {
+       "ab": 3,
+       "m": "Dmax",
+       "limS": 54,
+       "limL": 64.8,
+       "cut": 24,
+       "note": "CARE: 54 Gy <2 y, 64.8 Gy ≥2 y (α/β 3)"
+      },
+      {
+       "ab": 2,
+       "m": "Dmax",
+       "limS": 45,
+       "limL": 54,
+       "cut": 24,
+       "note": "CARE: 45 Gy <2 y, 54 Gy ≥2 y"
+      }
+     ]
+    }
+   ]
+  },
   "PEL": {
    "organs": [
     "Rectum",
@@ -927,14 +1248,15 @@ const P = {
  }
 };
 const STEPS = ["Setup", "Course 1", "Recovery", "Course 2", "Results", "Evidence"];
-const KEY = "boc-rert-eqd2-app-v2";
+const KEY = "boc-rert-eqd2-app-v3";
 const CREDIT = "Designed by Ali Eid · Under testing by the Radiation Oncology team";
 const METRICS = ["Dmax","D0.03cc","D0.1cc","D0.5cc","D1cc","D2cc","D10cc","Dmean"];
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;");
 const f1 = v => Number.isFinite(v) ? v.toFixed(1) : "–";
 const numv = x => { const n = parseFloat(String(x ?? "").replace(",", ".")); return Number.isFinite(n) ? n : NaN; };
-const refShort = k => ({ESTRO22:"ESTRO–EORTC 2022",ESTRO23:"Willmann 2023",ASTRO24:"Lee & Hoskin 2024",NG21:"Ng 2021",ARS22:"ARS / Ward 2022",NIEDER:"Nieder 2005/06",SLEVIN21:"Slevin 2021",UKSABR25:"UK SABR 2025",FAUNDEZ26:"Faundez 2026"})[k] || k;
+const refShort = k => ({ESTRO22:"ESTRO–EORTC 2022",ESTRO23:"Willmann 2023",ASTRO24:"Lee & Hoskin 2024",NG21:"Ng 2021",ARS22:"ARS / Ward 2022",NIEDER:"Nieder 2005/06",SLEVIN21:"Slevin 2021",UKSABR25:"UK SABR 2025",FAUNDEZ26:"Faundez 2026",EANO25:"ESTRO/EANO 2025",MAYER08:"Mayer & Sminia 2008",RADES24:"Rades 2024 (Stiefel)"})[k] || k;
+const SITENAME = {HN:"Head & neck", CNS:"CNS", PEL:"Pelvis"};
 
 const proto = () => P.sites[S.site].protocols.find(p => p.id === S.proto) || P.sites[S.site].protocols[0];
 function ukRule(m){ return !Number.isFinite(m) || m < 6 ? 0 : m <= 18 ? 30 : 50; }
@@ -952,7 +1274,7 @@ function applyProto(id){
 function limOf(o){ const m = months(); const L = (o.cut && Number.isFinite(m) && m >= o.cut && o.limL != null) ? o.limL : o.limS; return numv(L); }
 function freshState(site){
   const st = { site, step: 0, proto: "BOC", name: "", mrn: "", c1end: "", c2start: "", boost: site === "PEL",
-    c1: { na: "", nb: "", tps: "", meth: "", reg: "" }, c2: { na: "", nb: "", tps: "", meth: "", reg: "" },
+    c1: { na: "", nb: "", am: "total", bm: site === "PEL" ? "fx" : "total", tps: "", meth: "", reg: "" }, c2: { na: "", nb: "", am: "total", bm: site === "PEL" ? "fx" : "total", tps: "", meth: "", reg: "" },
     organs: P.sites[site].organs.map(blankOrgan) };
   S = st; applyProto("BOC"); return S;
 }
@@ -960,9 +1282,11 @@ function exampleState(site){
   const e = CFG[site].ex; freshState(site);
   Object.assign(S, { name: e.p.name, mrn: e.p.mrn, c1end: e.c1end, c2start: e.c2start });
   const firstN = k => { for (const o of e.organs) if (o[k] && o[k][1]) return o[k][1]; return ""; };
-  S.c1 = { na: firstN("a1"), nb: firstN("b1"), tps: site === "PEL" ? "Oncentra Brachy" : "Monaco", meth: P.methods[2], reg: "" };
-  S.c2 = { na: firstN("a2"), nb: firstN("b2"), tps: site === "PEL" ? "Oncentra Brachy" : "RayStation", meth: P.methods[2], reg: "" };
-  e.organs.forEach((o, i) => { for (const k of ["a1","b1","a2","b2"]) S.organs[i][k] = (o[k] && o[k][0] != null) ? o[k][0] : ""; });
+  const bm = site === "PEL" ? "fx" : "total";
+  S.c1 = { na: firstN("a1"), nb: firstN("b1"), am: "total", bm, tps: site === "PEL" ? "Oncentra Brachy" : "Monaco", meth: P.methods[2], reg: "" };
+  S.c2 = { na: firstN("a2"), nb: firstN("b2"), am: "total", bm, tps: site === "PEL" ? "Oncentra Brachy" : "RayStation", meth: P.methods[2], reg: "" };
+  e.organs.forEach((o, i) => { for (const k of ["a1","b1","a2","b2"]) { let v = (o[k] && o[k][0] != null) ? o[k][0] : "";
+    if (v !== "" && k[0] === "b" && bm === "fx") v = Math.round(v / o[k][1] * 100) / 100; S.organs[i][k] = v; } });
   applyProto("BOC"); return S;
 }
 let S;
@@ -971,8 +1295,10 @@ if (!S || !P.sites[S.site]) exampleState("HN");
 function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (_) {} }
 
 function comp(D, n, ab){ D = numv(D); n = numv(n); ab = numv(ab); if (!Number.isFinite(D) || !(n > 0) || !(ab > 0)) return null; return D * (D / n + ab) / (2 + ab); }
+function totalD(o, c, k){ const C = S["c" + c], v = numv(o[k + c]), n = numv(C["n" + k]); if (!Number.isFinite(v)) return NaN; return C[k + "m"] === "fx" ? v * n : v; }
+function perFx(o, c, k){ const C = S["c" + c], v = numv(o[k + c]), n = numv(C["n" + k]); if (!Number.isFinite(v)) return NaN; return C[k + "m"] === "fx" ? v : v / n; }
 function course(o, c){
-  const C = S["c" + c]; const a = comp(o["a" + c], C.na, o.ab); const b = S.boost ? comp(o["b" + c], C.nb, o.ab) : null;
+  const C = S["c" + c]; const a = comp(totalD(o, c, "a"), C.na, o.ab); const b = S.boost ? comp(totalD(o, c, "b"), C.nb, o.ab) : null;
   return (a === null && b === null) ? NaN : (a || 0) + (b || 0);
 }
 function calcOrgan(o){
@@ -983,6 +1309,31 @@ function calcOrgan(o){
   if (Number.isFinite(cum) && lim > 0){ pct = cum / lim * 100; st = pct > 100 ? "bad" : pct > 90 ? "warn" : "ok"; lab = pct > 100 ? "Exceeds" : pct > 90 ? "Caution" : "Within"; }
   return { e1, e2, r, res, cum, nom, lim, st, lab, pct };
 }
+function solveD(E, n, ab){ if (!(E > 0)) return 0; if (!(n > 0) || !(ab > 0)) return NaN; return n * (-ab + Math.sqrt(ab * ab + 4 * E * (2 + ab) / n)) / 2; }
+function remaining(o){
+  const R = calcOrgan(o), lim = R.lim; if (!(lim > 0) || !Number.isFinite(R.res)) return null;
+  const rem = lim - R.res, ab = numv(o.ab), alt = [30, 15, 10, 5].map(k => [k, solveD(rem, k, ab)]);
+  const nA = numv(S.c2.na), nB = numv(S.c2.nb);
+  if (!(nA > 0) && S.boost && nB > 0) { const D = solveD(rem, nB, ab); return { rem, remA: rem, n: nB, D, d: D / nB, bB: null, alt, lim, res: R.res, comp: CFG[S.site].comp2 }; }
+  const bB = S.boost ? comp(totalD(o, 2, "b"), S.c2.nb, o.ab) : null; const remA = rem - (bB || 0);
+  const D = solveD(remA, nA, ab);
+  return { rem, remA, n: nA, D, d: nA > 0 ? D / nA : NaN, bB, alt, lim, res: R.res, comp: CFG[S.site].comp1 };
+}
+function remLine(o){
+  const X = remaining(o); if (!X) return `<span style="color:var(--muted)">No limit set – dose remaining not calculated</span>`;
+  if (X.rem <= 0) return `<b style="color:var(--bad)">No dose remaining</b> (residual EQD2₁ ${f1(X.res)} ≥ limit ${f1(X.lim)} Gy)`;
+  const c1 = X.comp;
+  return `EQD2 remaining <b>${f1(X.rem)} Gy</b>` + (X.n > 0 ? (X.remA > 0 ? ` · max ${esc(c1)} <b>${f1(X.D)} Gy in ${X.n} fx</b> (${X.d.toFixed(2)} Gy/fx)${X.bB ? ` after ${f1(X.bB)} Gy EQD2 from ${esc(CFG[S.site].comp2)}` : ""}` : ` · <b style="color:var(--bad)">${esc(CFG[S.site].comp2)} alone uses it all</b>`) : ` · e.g. ${X.alt.map(([k, v]) => `${f1(v)} Gy/${k} fx`).join(", ")}`);
+}
+const hiFx = () => active().some(([o]) => [[1,"a"],[1,"b"],[2,"a"],[2,"b"]].some(([c, k]) => (k === "a" || S.boost) && perFx(o, c, k) > 8));
+function breakdown(o, c){
+  const site = CFG[S.site], C = S["c" + c], parts = [];
+  for (const k of S.boost ? ["a","b"] : ["a"]) { const D = totalD(o, c, k), n = numv(C["n" + k]);
+    if (!Number.isFinite(D)) continue;
+    if (!(n > 0)) { parts.push(`${esc(k === "a" ? site.comp1 : site.comp2)}: enter fractions`); continue; }
+    parts.push(`${esc(k === "a" ? site.comp1 : site.comp2)}: ${f1(D)} Gy / ${n} fx = ${(D / n).toFixed(2)} Gy/fx → ${f1(comp(D, n, o.ab))} Gy EQD2`); }
+  return parts.join("<br>");
+}
 const active = () => S.organs.map((o, i) => [o, i]).filter(([o]) => o.on && o.n.trim());
 const recEvidence = name => { const k = String(name).toLowerCase().split(/[ (]/)[0]; return P.sites[S.site].recovery.find(r => r.organ.toLowerCase().includes(k)); };
 const doubleCount = () => proto().rec === "built-in" && active().some(([o]) => numv(o.r) > 0);
@@ -992,7 +1343,7 @@ function vSetup(){
   const p = proto(), m = months();
   return `<h2>Setup</h2><p class="lead">Choose the site and protocol, enter the dates, and check the organ list.</p>
   <div class="seg" role="group" aria-label="Treatment site">
-    ${["HN","PEL"].map(k => `<button type="button" data-site="${k}" class="${S.site===k?"on":""}">${k==="HN"?"Head & neck":"Pelvis"}</button>`).join("")}
+    ${["HN","CNS","PEL"].map(k => `<button type="button" data-site="${k}" class="${S.site===k?"on":""}">${SITENAME[k]}</button>`).join("")}
   </div>
   <div class="card"><h3>Patient</h3>
     <div class="row two"><label class="f">Name<input data-k="name" value="${esc(S.name)}" autocomplete="off"></label>
@@ -1035,15 +1386,20 @@ function vCourse(c){
     <label class="f">Registration / summation software (if used)<input data-c="${c}" data-f="reg" value="${esc(C.reg)}" placeholder="e.g. RayStation DIR, MIM"></label>
     ${C.meth && C.meth.startsWith("Estimated") ? `<div class="alert warn">ESTRO–EORTC: with no previous plan, assume the prescription dose reached the OAR (conservative).</div>` : ""}
   </div>
-  <div class="card"><h3>Fractions</h3><div class="row two">
-    <label class="f">${esc(site.comp1)} fractions<input class="big" data-c="${c}" data-f="na" value="${esc(C.na)}" inputmode="numeric" placeholder="n"></label>
-    ${S.boost ? `<label class="f">${esc(site.comp2)} fractions<input class="big" data-c="${c}" data-f="nb" value="${esc(C.nb)}" inputmode="numeric" placeholder="n"></label>` : ""}
-  </div>${S.boost ? `<p class="note">For brachytherapy, enter the summed dose over all fractions.</p>` : ""}</div>
+  ${c === 2 ? `<div class="card slot"><h3>Dose remaining for Course 2 <small>limit − residual EQD2₁</small></h3>
+    <p class="note">Maximum physical dose Course 2 can deliver to each organ at its metric, for the fractions entered below. Change the fractions and it updates.</p>
+    ${active().map(([o, i]) => `<div><b>${esc(o.n)}</b><p class="note" data-live="rem-${i}">${remLine(o)}</p></div>`).join("")}</div>` : ""}
+  <div class="card"><h3>Fractions and dose entry</h3><div class="row two">
+    ${(S.boost ? ["a","b"] : ["a"]).map(k => `<div style="display:grid;gap:6px"><label class="f">${esc(k === "a" ? site.comp1 : site.comp2)} fractions<input class="big" data-c="${c}" data-f="n${k}" value="${esc(C["n" + k])}" inputmode="numeric" placeholder="n"></label>
+      <div class="quick" role="group" aria-label="Dose entered as"><button type="button" data-mode="${c}${k}" data-v="total" class="${C[k + "m"] !== "fx" ? "on" : ""}">Total</button><button type="button" data-mode="${c}${k}" data-v="fx" class="${C[k + "m"] === "fx" ? "on" : ""}">Per fx</button></div></div>`).join("")}
+  </div><p class="note">Choose whether each dose below is the total or the dose per fraction. HDR brachytherapy is usually entered per fraction (e.g. 7 Gy × 4 fx = 28 Gy total).</p></div>
   ${active().map(([o, i]) => { const e = course(o, c); return `<div class="organ">
     <div class="head"><span class="name">${esc(o.n)}</span><span class="meta">${esc(o.m)} · α/β ${esc(o.ab)}</span></div>
-    <div class="row two"><label class="f">${esc(site.comp1)} dose (Gy)<input class="big" data-o="${i}" data-f="a${c}" value="${esc(o["a"+c])}" inputmode="decimal" placeholder="–"></label>
-    ${S.boost ? `<label class="f">${esc(site.comp2)} dose (Gy)<input class="big" data-o="${i}" data-f="b${c}" value="${esc(o["b"+c])}" inputmode="decimal" placeholder="–"></label>` : ""}</div>
-    <div class="res"><span>EQD2${c===1?"₁":"₂"}</span><b data-live="e${c}-${i}">${f1(e)} Gy</b></div></div>`; }).join("")}`;
+    <div class="row two"><label class="f">${esc(site.comp1)} ${C.am === "fx" ? "dose per fx" : "total dose"} (Gy)<input class="big" data-o="${i}" data-f="a${c}" value="${esc(o["a"+c])}" inputmode="decimal" placeholder="–"></label>
+    ${S.boost ? `<label class="f">${esc(site.comp2)} ${C.bm === "fx" ? "dose per fx" : "total dose"} (Gy)<input class="big" data-o="${i}" data-f="b${c}" value="${esc(o["b"+c])}" inputmode="decimal" placeholder="–"></label>` : ""}</div>
+    <p class="note" data-live="bd${c}-${i}">${breakdown(o, c)}</p>
+    <div class="res"><span>EQD2${c===1?"₁":"₂"}</span><b data-live="e${c}-${i}">${f1(e)} Gy</b></div>${c === 2 ? `<p class="note" data-live="rem2-${i}">${remLine(o)}</p>` : ""}</div>`; }).join("")}
+  <div class="alert warn" id="hiFx" ${hiFx() ? "" : "hidden"}>A dose per fraction above 8 Gy is entered. The LQ/EQD2 model is less reliable at SRS/SBRT doses; interpret with caution.</div>`;
 }
 function vRecovery(){
   const m = months(), any = active().some(([o]) => numv(o.r) > 0), p = proto();
@@ -1072,6 +1428,7 @@ function vResults(){
   return `<h2>Results</h2><p class="lead">${esc(S.name || "Patient")}${S.mrn ? " · " + esc(S.mrn) : ""} · ${esc(CFG[S.site].title)} · interval ${Number.isFinite(m) ? m.toFixed(1) + " months" : "–"}</p>
   <div class="card"><h3>Protocol <small>${p.refs.map(refShort).join("; ") || "local"}</small></h3><p class="note" style="color:var(--ink)">${esc(p.label)}</p>
     <p class="note">${crs(1)}<br>${crs(2)}</p>
+    ${hiFx() ? `<div class="alert warn">Dose per fraction above 8 Gy entered: EQD2 is less reliable at SRS/SBRT doses.</div>` : ""}
     ${doubleCount() ? `<div class="alert bad">Recovery entered although this protocol's limits apply to the full Course 1 dose.</div>` : ""}</div>
   <div class="summary"><div class="tile ok"><b>${cnt("ok")}</b><span>Within</span></div><div class="tile warn"><b>${cnt("warn")}</b><span>Caution</span></div><div class="tile bad"><b>${cnt("bad")}</b><span>Exceeds</span></div></div>
   ${list.length ? "" : `<div class="card"><b>No results yet.</b><p class="note">Enter fractions and doses in Course 1 and Course 2.</p></div>`}
@@ -1079,6 +1436,7 @@ function vResults(){
     <div class="head"><b>${esc(o.n)}</b><span class="pill ${R.st}">${R.lab}${Number.isFinite(R.pct) ? " · " + R.pct.toFixed(0) + " %" : ""}</span></div>
     <div class="track" role="img" aria-label="${esc(o.n)} cumulative ${f1(R.cum)} Gy"><i class="a" style="width:${R.res / max * 100}%"></i><i class="b" style="width:${R.e2 / max * 100}%"></i>${R.lim > 0 ? `<span class="lim" style="left:${R.lim / max * 100}%"></span>` : ""}</div>
     <div class="nums"><span>EQD2₁<b>${f1(R.e1)}</b></span><span>After ${R.r} %<b>${f1(R.res)}</b></span><span>EQD2₂<b>${f1(R.e2)}</b></span><span>Cumulative<b>${f1(R.cum)}</b></span></div>
+    <div class="meta" style="font-size:12.5px">Course 2 allowance: ${remLine(o)}</div>
     <div class="meta" style="font-size:12.5px;color:var(--muted)">Without recovery ${f1(R.nom)} Gy · limit ${R.lim > 0 ? f1(R.lim) + " Gy" : "none"} · ${esc(o.m)}, α/β ${esc(o.ab)}${o.note ? " · " + esc(o.note) : ""}</div></div>`).join("")}
   <div class="legend"><span><i style="background:var(--c1)"></i>Course 1 after recovery</span><span><i style="background:var(--c2)"></i>Course 2</span><span><i style="background:var(--bad);width:3px"></i>Limit</span></div>
   <div class="actions noprint"><button type="button" class="btn primary" data-act="copy">Copy summary</button><button type="button" class="btn" data-act="print">Print / PDF</button></div>
@@ -1086,14 +1444,15 @@ function vResults(){
   <p class="foot">${CREDIT}<br>RMS.BOC.RON.PHY.0__ · Rev. 01 · Oct 2026</p>`;
 }
 function vEvidence(){
-  const site = P.sites[S.site], used = new Set(["ESTRO22","ESTRO23","ASTRO24"]);
+  const site = P.sites[S.site], used = new Set(["ESTRO22","ESTRO23","ASTRO24"].concat(S.site === "CNS" ? ["EANO25"] : []));
   site.protocols.forEach(p => p.refs.forEach(r => used.add(r)));
   const cell = (v) => v.limS == null ? `<span style="color:var(--muted)">–</span>` : `${v.limS}${v.limL != null ? ` → ${v.limL} <small>(≥${v.cut} mo)</small>` : ""}<br><small>${esc(v.m)} · α/β ${v.ab}</small>`;
   const prots = site.protocols.filter(p => p.id !== "BOC");
-  return `<h2>Evidence</h2><p class="lead">${S.site === "HN" ? "Head & neck" : "Pelvis"}: cumulative EQD2 limits (Gy) by protocol, recovery evidence, and references.</p>
+  return `<h2>Evidence</h2><p class="lead">${SITENAME[S.site]}: cumulative EQD2 limits (Gy) by protocol, recovery evidence, and references.</p>
   <div class="card"><h3>What the major bodies say</h3>
     <p class="note" style="color:var(--ink)"><b>ESTRO–EORTC (2022):</b> defines Type 1 / Type 2 re-irradiation and reporting; sum doses as EQD2/BED with relevant α/β; record the source and method of the previous dose; if the previous plan is unavailable, assume the prescription dose reached the OAR. It gives <b>no organ-specific cumulative limits</b>. Survey (2023): the most common minimum interval used is 6–12 months.</p>
     <p class="note" style="color:var(--ink)"><b>ASTRO:</b> no re-irradiation guideline for these sites; its 2023 education panel summarised the ESTRO–EORTC consensus. The US society guidance used here is the <b>American Radium Society</b> AUC (H&N).</p>
+    ${S.site === "CNS" ? `<p class="note" style="color:var(--ink)"><b>ESTRO/EANO (2025), glioblastoma:</b> KPS ≥60 and interval &gt;6 months; re-irradiation EQD2 no less than 36 Gy (e.g. 35 Gy/10 fx or 27–30 Gy/3–5 fx); sum doses as EQD2 with α/β 3 Gy; recovery only for brain and spinal cord; no consensus for brainstem; optic recovery uncertain. It gives <b>no numerical cumulative limits</b>; the limits here come from the literature it does not replace.</p>` : ""}
     <p class="note" style="color:var(--ink)"><b>UK:</b> UK SABR Consortium pelvic re-irradiation guidance (2025) gives the recovery rule. No UK H&N re-irradiation guideline was found.</p></div>
   <div class="card"><h3>Cumulative limits by protocol</h3><div style="overflow-x:auto"><table style="border-collapse:collapse;font-size:13px;width:100%">
     <thead><tr><th style="text-align:left;padding:6px;border-bottom:1px solid var(--line)">Organ</th>${prots.map(p => `<th style="text-align:left;padding:6px;border-bottom:1px solid var(--line);min-width:110px">${esc(refShort(p.refs[0]))}${p.id==="NG_D"?" desirable":p.id==="NG_A"?" acceptable":""}</th>`).join("")}</tr></thead>
@@ -1117,7 +1476,10 @@ function go(n){ S.step = Math.max(0, Math.min(STEPS.length - 1, n)); render(); t
 function live(){
   active().forEach(([o, i]) => { const R = calcOrgan(o);
     const set = (k, v) => { const el = document.querySelector(`[data-live="${k}"]`); if (el) el.textContent = f1(v) + " Gy"; };
-    set(`e1-${i}`, R.e1); set(`e2-${i}`, R.e2); set(`res-${i}`, R.res); });
+    set(`e1-${i}`, R.e1); set(`e2-${i}`, R.e2); set(`res-${i}`, R.res);
+    document.querySelectorAll(`[data-live="rem-${i}"],[data-live="rem2-${i}"]`).forEach(el => el.innerHTML = remLine(o));
+    [1, 2].forEach(c => { const el = document.querySelector(`[data-live="bd${c}-${i}"]`); if (el) el.innerHTML = breakdown(o, c); }); });
+  const hf = $("hiFx"); if (hf) hf.hidden = !hiFx();
   const w = $("recWarn"); if (w){ const m = months(); w.hidden = !(Number.isFinite(m) && m < 6 && active().some(([o]) => numv(o.r) > 0)); }
   const d = $("dblWarn"); if (d) d.hidden = !doubleCount();
   document.querySelectorAll("[data-rq]").forEach(b => b.classList.toggle("on", numv(S.organs[b.dataset.rq].r) === numv(b.dataset.p)));
@@ -1141,7 +1503,8 @@ document.addEventListener("change", e => {
 document.addEventListener("click", e => {
   const b = e.target.closest("button"); if (!b) return; const d = b.dataset;
   if (d.step) return go(+d.step);
-  if (d.site){ if (d.site !== S.site){ freshState(d.site); render(); toast((d.site === "HN" ? "Head & neck" : "Pelvis") + " organ list loaded"); } return; }
+  if (d.site){ if (d.site !== S.site){ freshState(d.site); render(); toast(SITENAME[d.site] + " organ list loaded"); } return; }
+  if (d.mode){ const c = d.mode[0], k = d.mode[1]; S["c" + c][k + "m"] = d.v; render(); toast(d.v === "fx" ? "Doses now read as dose per fraction" : "Doses now read as total dose"); return; }
   if (d.rq !== undefined){ S.organs[+d.rq].r = +d.p; const inp = document.querySelector(`[data-o="${d.rq}"][data-f="r"]`); if (inp) inp.value = d.p; live(); return; }
   const act = d.act;
   if (act === "ukAll"){ const q = ukRule(months()); active().forEach(([o]) => { o.r = q; o.basis = `UK SABR 2025 rule (${q}% for ${f1(months())} mo)`; }); render(); toast(`UK rule applied: ${q} %`); }
@@ -1159,11 +1522,11 @@ $("nextBtn").onclick = () => go(S.step === STEPS.length - 1 ? 0 : S.step + 1);
 function toast(t){ const el = $("toast"); el.textContent = t; el.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => el.hidden = true, 2400); }
 function copySummary(){
   const m = months(), site = CFG[S.site], p = proto();
-  const crs = c => { const C = S["c"+c]; return `Course ${c}: TPS ${C.tps || "–"}; dose data ${C.meth || "–"}${C.reg ? "; software " + C.reg : ""}; fractions ${site.comp1} ${C.na || "–"}${S.boost ? `, ${site.comp2} ${C.nb || "–"}` : ""}`; };
+  const crs = c => { const C = S["c"+c]; return `Course ${c}: TPS ${C.tps || "–"}; dose data ${C.meth || "–"}${C.reg ? "; software " + C.reg : ""}; fractions ${site.comp1} ${C.na || "–"}${S.boost ? `, ${site.comp2} ${C.nb || "–"}` : ""}; doses entered as ${C.am === "fx" ? "per fx" : "total"}${S.boost ? ` / ${C.bm === "fx" ? "per fx" : "total"}` : ""}`; };
   let s = `BOC ${site.title.toUpperCase()} – CUMULATIVE EQD2\n${CREDIT}\nPatient: ${S.name} | MRN: ${S.mrn}\nCourse 1 ended ${S.c1end || "–"}; Course 2 starts ${S.c2start || "–"}; interval ${Number.isFinite(m) ? m.toFixed(1) + " months" : "–"}\n`;
   s += `Protocol: ${p.label}${p.refs.length ? " [" + p.refs.map(k => P.refs[k]).join(" | ") + "]" : ""}\n${crs(1)}\n${crs(2)}\n\n`;
   active().forEach(([o]) => { const R = calcOrgan(o); if (!Number.isFinite(R.cum)) return;
-    s += `${o.n} [${o.m}, α/β ${o.ab}]: EQD2₁ ${f1(R.e1)} → ${f1(R.res)} Gy after ${R.r}% recovery${o.basis ? " (" + o.basis + ")" : ""}; EQD2₂ ${f1(R.e2)} Gy; cumulative ${f1(R.cum)} Gy (no recovery ${f1(R.nom)}); limit ${R.lim > 0 ? f1(R.lim) + " Gy" : "–"}${o.note ? " (" + o.note + ")" : ""} – ${R.lab}${Number.isFinite(R.pct) ? " " + R.pct.toFixed(0) + "%" : ""}\n`; });
+    s += `${o.n} [${o.m}, α/β ${o.ab}]: EQD2₁ ${f1(R.e1)} → ${f1(R.res)} Gy after ${R.r}% recovery${o.basis ? " (" + o.basis + ")" : ""}; EQD2₂ ${f1(R.e2)} Gy; cumulative ${f1(R.cum)} Gy (no recovery ${f1(R.nom)}); limit ${R.lim > 0 ? f1(R.lim) + " Gy" : "–"}${o.note ? " (" + o.note + ")" : ""} – ${R.lab}${Number.isFinite(R.pct) ? " " + R.pct.toFixed(0) + "%" : ""}; Course 2 allowance: ${remLine(o).replace(/<[^>]+>/g, "")}\n`; });
   if (doubleCount()) s += "\nWARNING: recovery entered although this protocol's limits apply to the full Course 1 dose.\n";
   const fallback = () => { const ta = document.createElement("textarea"); ta.value = s; ta.rows = 10; ta.className = "noprint"; $("main").appendChild(ta); ta.focus(); ta.select(); toast("Selected below. Copy it from there."); };
   if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(s).then(() => toast("Summary copied"), fallback); else fallback();

@@ -1,6 +1,6 @@
 // Offline cache for the BOC Re-irradiation EQD2 app.
 // Change VERSION whenever any file changes, so phones pick up the update.
-const VERSION = "rert-eqd2-v2";
+const VERSION = "rert-eqd2-v4";
 const FILES = ["./", "index.html", "manifest.webmanifest", "icon-192.png", "icon-512.png",
                "icon-maskable-512.png", "apple-touch-icon.png", "favicon.png"];
 self.addEventListener("install", e => {
