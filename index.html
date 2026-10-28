@@ -97,6 +97,8 @@ input.big{font-size:20px;font-weight:700;text-align:center;padding:10px 6px;font
 .legend i{display:inline-block;width:12px;height:10px;border-radius:2px;margin-right:5px;vertical-align:middle}
 .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .btn{border:1px solid var(--gold);background:var(--card);color:var(--ink);border-radius:10px;padding:12px;font:inherit;font-weight:600;cursor:pointer;text-align:center}
+.btn[disabled]{opacity:.45;cursor:default}
+label.btn{display:block}
 .btn.primary{background:var(--gold);color:var(--gold-ink)}
 .btn.ghost{border-color:var(--line);color:var(--muted);font-weight:500}
 .btn:focus-visible,.chip:focus-visible,.quick button:focus-visible,.seg button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
@@ -112,10 +114,29 @@ input.big{font-size:20px;font-weight:700;text-align:center;padding:10px 6px;font
 .credit{display:flex;align-items:center;gap:8px;margin-top:6px;font-size:12.5px;color:var(--muted);flex-wrap:wrap}
 .credit .tag{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--warn);background:var(--warn-bg);border-radius:999px;padding:2px 8px}
 [hidden]{display:none!important}
+#report{display:none}
+.rp{font-family:"Times New Roman",Times,serif;color:#111;border:4px double #a8842c;padding:14px 16px;font-size:10.5pt;background:#fff}
+.rp-h{display:flex;justify-content:space-between;gap:12px;border-bottom:3px double #a8842c;padding-bottom:6px}
+.rp-org{font-size:8.5pt;color:#555;letter-spacing:.03em}.rp-t{font-size:15pt;font-weight:700;margin-top:4px}
+.rp-no{font-size:8.5pt;text-align:right;color:#333;white-space:nowrap}
+.rp-tag{font-size:8.5pt;color:#9a6a00;font-style:italic;margin:4px 0 6px}
+.rp h4{font-size:11pt;margin:10px 0 4px;border-bottom:1px solid #a8842c;padding-bottom:2px}
+.rp-g{width:100%;border-collapse:collapse;font-size:9pt}
+.rp-g th,.rp-g td{border:1px solid #bfb08a;padding:3px 4px;text-align:center;vertical-align:top}
+.rp-g th{background:#f3ead3;font-weight:700}.rp-g td.l,.rp-g th:first-child{text-align:left}
+.rp-g .s-bad{color:#a3282b;font-weight:700}.rp-g .s-warn{color:#946400;font-weight:700}.rp-g .s-ok{color:#2f7a4a;font-weight:700}
+.rp-sig td{height:26px}
+.rp-w{font-size:9pt;color:#a3282b;font-weight:700;margin:4px 0}
+.rp-f{font-size:8pt;color:#555;margin:4px 0}
+.rp-foot{display:flex;justify-content:space-between;gap:8px;border-top:3px double #a8842c;margin-top:10px;padding-top:4px;font-size:7.5pt;color:#555}
 @media print{
+  @page{size:A4 portrait;margin:10mm}
   .top .steps,.nav,.actions,.toast,.noprint{display:none!important}
   .top{position:static} main{padding:0} body{background:#fff}
   .rc,.card{break-inside:avoid}
+  body.printing-report > *:not(#report){display:none!important}
+  body.printing-report #report{display:block!important}
+  .rp-g tr{break-inside:avoid}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -888,6 +909,14 @@ const P = {
    ],
    "recovery": [
     {
+     "organ": "All pelvic organs (ESTRO–EORTC / ASTRO)",
+     "text": "ESTRO–EORTC 2022 (presented at the 2023 ASTRO panel): no organ-specific recovery values; reconstruct conservatively and assume no recovery unless a peer-reviewed source supports it",
+     "refs": [
+      "ESTRO22",
+      "ASTRO24"
+     ]
+    },
+    {
      "organ": "Rectum / sigmoid / colon",
      "text": "Delphi 2021: 'some recovery' after ≥12 mo (80→100 Gy₃, no consensus) · UK SABR 2025: 30% (6–18 mo), 50% (>18 mo)",
      "refs": [
@@ -1011,6 +1040,85 @@ const P = {
        "limL": null,
        "cut": null,
        "note": "Example – confirm BOC policy"
+      }
+     ]
+    },
+    {
+     "id": "ESTRO_ASTRO",
+     "label": "ESTRO–EORTC / ASTRO framework (conservative)",
+     "refs": [
+      "ESTRO22",
+      "ASTRO24",
+      "SLEVIN21",
+      "ESTRO23"
+     ],
+     "rec": "built-in",
+     "desc": "Applies the ESTRO–EORTC consensus (endorsed in the 2023 ASTRO education panel): EQD2 summation with relevant α/β (3 Gy late normal tissue, 2 Gy neural), conservative reconstruction and no recovery credit, minimum interval 6–12 months. ESTRO and ASTRO publish no numerical pelvic limits, so the no-recovery limits come from the international Delphi (Slevin 2021, Radiother Oncol), as the consensus advises using peer-reviewed guidance.",
+     "recdef": null,
+     "organs": [
+      {
+       "ab": 3,
+       "m": "D0.5cc",
+       "limS": 80,
+       "limL": null,
+       "cut": null,
+       "note": "No recovery; Delphi optimal 80 Gy₃ (no consensus)"
+      },
+      {
+       "ab": 3,
+       "m": "D0.5cc",
+       "limS": 80,
+       "limL": null,
+       "cut": null,
+       "note": "No recovery; Delphi optimal 80 Gy₃ (no consensus)"
+      },
+      {
+       "ab": 3,
+       "m": "D0.5cc",
+       "limS": 80,
+       "limL": null,
+       "cut": null,
+       "note": "No recovery; Delphi optimal 80 Gy₃ (no consensus)"
+      },
+      {
+       "ab": 3,
+       "m": "D0.5cc",
+       "limS": 70,
+       "limL": null,
+       "cut": null,
+       "note": "No recovery; Delphi optimal 70 Gy₃ (no consensus)"
+      },
+      {
+       "ab": 3,
+       "m": "D2cc",
+       "limS": null,
+       "limL": null,
+       "cut": null,
+       "note": "No numerical limit in ESTRO/ASTRO or Delphi – set locally"
+      },
+      {
+       "ab": 2,
+       "m": "D0.1cc",
+       "limS": 67,
+       "limL": null,
+       "cut": null,
+       "note": "No recovery; Delphi 67 Gy₂ (consensus)"
+      },
+      {
+       "ab": 2,
+       "m": "D0.1cc",
+       "limS": 67,
+       "limL": null,
+       "cut": null,
+       "note": "No recovery; Delphi 67 Gy₂ (consensus)"
+      },
+      {
+       "ab": 3,
+       "m": "D10cc",
+       "limS": null,
+       "limL": null,
+       "cut": null,
+       "note": "No numerical limit in ESTRO/ASTRO or Delphi – set locally"
       }
      ]
     },
@@ -1247,7 +1355,8 @@ const P = {
   }
  }
 };
-const STEPS = ["Setup", "Course 1", "Recovery", "Course 2", "Results", "Evidence"];
+const STEPS = ["Setup", "Course 1", "Recovery", "Course 2", "Results", "Evidence", "Archive"];
+const ARCH_KEY = "boc-rert-eqd2-archive-v1";
 const KEY = "boc-rert-eqd2-app-v3";
 const CREDIT = "Designed by Ali Eid · Under testing by the Radiation Oncology team";
 const METRICS = ["Dmax","D0.03cc","D0.1cc","D0.5cc","D1cc","D2cc","D10cc","Dmean"];
@@ -1338,6 +1447,312 @@ const active = () => S.organs.map((o, i) => [o, i]).filter(([o]) => o.on && o.n.
 const recEvidence = name => { const k = String(name).toLowerCase().split(/[ (]/)[0]; return P.sites[S.site].recovery.find(r => r.organ.toLowerCase().includes(k)); };
 const doubleCount = () => proto().rec === "built-in" && active().some(([o]) => numv(o.r) > 0);
 
+/* ---------- DVH import (CSV / TXT from the planning system) ---------- */
+// Supports: block files (Eclipse "Structure:", RayStation "#RoiName:", "ROI:", "Name:"),
+// wide tables (Dose column + one volume column per structure) and long tables (structure, dose, volume).
+let DVH = null; // { c, k, file, structs:[], over:{type,dose,vol}, map:{organIndex:structIndex}, tv:{structIndex:cc} }
+const DVH_METRICS = ["Dmax","D0.03cc","D0.1cc","D0.5cc","D1cc","D2cc","D10cc","Dmean"];
+const NUMRE = /^[-+]?(\d+\.?\d*|\.\d+)([eE][-+]?\d+)?$/;
+function splitRow(line){ const t = line.trim(); if (!t) return [];
+  if (t.includes("\t")) return t.split("\t").map(x => x.trim());
+  if (t.includes(";")) return t.split(";").map(x => x.trim());
+  if (t.includes(",")) return t.split(",").map(x => x.trim().replace(/^"|"$/g, ""));
+  return t.split(/\s+/); }
+const isNumRow = cells => cells.length >= 2 && cells.filter(x => x !== "").every(x => NUMRE.test(x.replace(",", ".")));
+const unitOf = txt => { const s = String(txt).toLowerCase();
+  return { dose: /cgy/.test(s) ? "cGy" : /\bgy\b|\[gy\]|\(gy\)/.test(s) ? "Gy" : null,
+           vol: /cm³|cm3|\bcc\b|\[cc\]|\(cc\)|cm\^3/.test(s) ? "cc" : /%|percent|ratio/.test(s) ? "%" : null }; };
+function parseDVH(text){
+  const r = parseDVH0(text), low = text.toLowerCase();
+  const hint = /differential/.test(low) ? "diff" : /cumulative/.test(low) ? "cum" : null;
+  r.forEach(s => s.typeHint = hint); return r;
+}
+function parseDVH0(text){
+  const lines = text.replace(/^\ufeff/, "").split(/\r?\n/);
+  const nameRe = /^\s*#?\s*(roi\s*name|roi|structure\s*name|structure|name)\s*[:=]\s*(.+?)\s*$/i;
+  const out = [];
+  if (lines.some(l => nameRe.test(l))) { // block format
+    let cur = null, globalHdr = "";
+    for (const l of lines) {
+      const m = l.match(nameRe);
+      if (m) { cur = { name: m[2].replace(/^"|"$/g, ""), hdr: "", colHdr: "", rows: [], totalVol: NaN }; out.push(cur); continue; }
+      const cells = splitRow(l);
+      if (cur && isNumRow(cells)) { cur.rows.push(cells.map(x => parseFloat(x.replace(",", ".")))); continue; }
+      if (cur) { cur.hdr += " " + l; if (/dose/i.test(l) && splitRow(l).length >= 2) cur.colHdr = l; const tv = l.match(/volume\s*(\[(cm³|cm3|cc)\]|\((cm³|cm3|cc)\))?\s*[:=]\s*([\d.,]+)\s*(cm³|cm3|cc)?/i);
+        if (tv && !/ratio|relative/i.test(l) && (tv[1] || tv[5])) cur.totalVol = parseFloat(tv[4].replace(",", ".")); }
+      else globalHdr += " " + l;
+    }
+    return out.filter(s => s.rows.length > 1).map(s => { const u = unitOf(s.hdr), g = unitOf(globalHdr);
+      // Eclipse: "Dose [cGy]  Relative dose [%]  Ratio of Total Structure Volume [%]" -> volume is last column
+      const cells = s.colHdr ? splitRow(s.colHdr) : [];
+      const vu = (cells.length ? unitOf(cells[cells.length - 1]).vol : null) || (/#\s*volume unit\s*:\s*%/i.test(globalHdr) ? "%" : null) || g.vol || u.vol;
+      const du = (cells.length ? unitOf(cells[0]).dose : null) || g.dose || u.dose;
+      return { name: s.name, dose: s.rows.map(r => r[0]), vol: s.rows.map(r => r[r.length - 1]), doseUnit: du, volUnit: vu, totalVol: s.totalVol }; });
+  }
+  // table formats
+  let hi = -1;
+  const numCount = c => c.filter(x => NUMRE.test(String(x).replace(",", "."))).length;
+  for (let i = 0; i < lines.length; i++) { const c = splitRow(lines[i]); if (c.length >= 2 && numCount(c) === 0 && i + 1 < lines.length && numCount(splitRow(lines[i + 1])) >= 2) { hi = i; break; } }
+  if (hi < 0) return [];
+  const head = splitRow(lines[hi]), body = lines.slice(hi + 1).map(splitRow).filter(c => c.length >= 2);
+  const low = head.map(h => h.toLowerCase());
+  const sCol = low.findIndex(h => /structure|roi|organ|name/.test(h));
+  const dCol = Math.max(0, low.findIndex(h => /dose/.test(h)));
+  if (sCol >= 0) { // long format
+    const vCol = low.findIndex((h, i) => i !== dCol && /vol/.test(h));
+    const groups = {};
+    for (const c of body) { const d = parseFloat((c[dCol] || "").replace(",", ".")), v = parseFloat((c[vCol] || "").replace(",", ".")); if (!Number.isFinite(d) || !Number.isFinite(v)) continue;
+      (groups[c[sCol]] = groups[c[sCol]] || { dose: [], vol: [] }); groups[c[sCol]].dose.push(d); groups[c[sCol]].vol.push(v); }
+    const u = unitOf(head.join(" "));
+    return Object.entries(groups).map(([name, g]) => ({ name, dose: g.dose, vol: g.vol, doseUnit: unitOf(head[dCol]).dose || u.dose, volUnit: unitOf(head[vCol] || "").vol || u.vol, totalVol: NaN }));
+  }
+  // wide format
+  const rows = body.filter(isNumRow).map(c => c.map(x => parseFloat(x.replace(",", "."))));
+  return head.map((h, i) => i === dCol ? null : { name: h.replace(/\s*[\[(].*?[\])]\s*/g, " ").replace(/\b(volume|vol)\b/ig, "").trim() || `Column ${i + 1}`,
+    dose: rows.map(r => r[dCol]), vol: rows.map(r => r[i]), doseUnit: unitOf(head[dCol]).dose, volUnit: unitOf(h).vol, totalVol: NaN }).filter(Boolean);
+}
+function prepStruct(s, over, tvUser){
+  const doseUnit = over.dose !== "auto" ? over.dose : (s.doseUnit || (Math.max(...s.dose) > 200 ? "cGy" : "Gy"));
+  let pts = s.dose.map((d, i) => [doseUnit === "cGy" ? d / 100 : d, s.vol[i]]).filter(p => Number.isFinite(p[0]) && Number.isFinite(p[1])).sort((a, b) => a[0] - b[0]);
+  if (pts.length < 2) return { ok: false, why: "no data" };
+  const volUnit = over.vol !== "auto" ? over.vol : (s.volUnit || (Math.abs(pts[0][1] - 100) < 0.5 && Math.max(...pts.map(p => p[1])) <= 100.01 ? "%" : "cc"));
+  const vmax = Math.max(...pts.map(p => p[1])); let mono = true;
+  for (let i = 1; i < pts.length; i++) if (pts[i][1] > pts[i - 1][1] + vmax * 1e-3) { mono = false; break; }
+  const distinct = new Set(pts.map(p => p[1].toFixed(4))).size;
+  const type = over.type !== "auto" ? over.type : (s.typeHint || (mono && distinct > 5 ? "cum" : "diff"));
+  let cum;
+  if (type === "cum") cum = pts.map(p => p[1]);
+  else { cum = new Array(pts.length); let acc = 0; for (let i = pts.length - 1; i >= 0; i--) { acc += pts[i][1]; cum[i] = acc; } }
+  let total = cum[0];
+  if (volUnit === "%") { const tv = Number.isFinite(tvUser) ? tvUser : s.totalVol;
+    if (!(tv > 0)) return { ok: false, why: "relative volume: enter the structure volume (cc)", doseUnit, volUnit, type, needTV: true };
+    cum = cum.map(v => v / (type === "cum" ? Math.max(cum[0], 1e-9) : Math.max(cum[0], 1e-9)) * tv); total = tv; }
+  const dose = pts.map(p => p[0]);
+  const Dv = v => { if (!(v > 0) || v > total + 1e-9) return NaN; for (let i = 0; i < cum.length - 1; i++) { if (cum[i] >= v && cum[i + 1] < v) { const f = (cum[i] - v) / (cum[i] - cum[i + 1]); return dose[i] + f * (dose[i + 1] - dose[i]); } } return cum[cum.length - 1] >= v ? dose[dose.length - 1] : NaN; };
+  let dmax = dose[0]; for (let i = 0; i < cum.length; i++) if (cum[i] > 1e-6) dmax = i + 1 < dose.length ? dose[i + 1] : dose[i];
+  let mean = 0; for (let i = 0; i < cum.length; i++) { const dv = cum[i] - (i + 1 < cum.length ? cum[i + 1] : 0); const dm = i + 1 < dose.length ? (dose[i] + dose[i + 1]) / 2 : dose[i]; mean += dv * dm; }
+  mean = total > 0 ? mean / total : NaN;
+  const m = { Dmax: dmax, "D0.03cc": Dv(0.03), "D0.1cc": Dv(0.1), "D0.5cc": Dv(0.5), "D1cc": Dv(1), "D2cc": Dv(2), "D10cc": Dv(10), Dmean: mean };
+  return { ok: true, doseUnit, volUnit, type, total, m };
+}
+const DVH_SYN = [["spinal cord", ["spinalcord","cord","canal"]], ["brainstem", ["brainstem","brain_stem","stem"]], ["optic chiasm", ["chiasm"]], ["optic nerve", ["opticnerve","optnrv","optic_n","on_"]],
+  ["temporal lobe", ["temporal"]], ["carotid", ["carotid"]], ["brachial plexus", ["brachial","bplexus"]], ["mandible", ["mandible","jaw"]], ["larynx", ["larynx","glottis"]],
+  ["rectum", ["rectum","rect"]], ["bladder", ["bladder","blad"]], ["sigmoid", ["sigmoid"]], ["small bowel", ["smallbowel","bowel","bowelbag","sb_"]], ["vagina", ["vagina"]],
+  ["sacral plexus", ["sacral","sacrplex"]], ["cauda equina", ["cauda"]], ["femoral head", ["femoral","femur","femhead","fem_"]], ["brain", ["brain"]]];
+function autoMatch(organName, structs){
+  const on = organName.toLowerCase(), side = /\(l\)|\bleft\b/.test(on) ? "l" : /\(r\)|\bright\b/.test(on) ? "r" : "";
+  const syn = DVH_SYN.find(([k]) => on.includes(k)); if (!syn) return -1;
+  let best = -1, score = 0;
+  structs.forEach((s, i) => { const n = s.name.toLowerCase().replace(/[\s\-]+/g, "");
+    if (syn[0] === "brain" && /stem/.test(n)) return;
+    if (!syn[1].some(k => n.includes(k.replace(/[\s\-]+/g, "")))) return;
+    let sc = 1; if (side && (new RegExp(`(_|\\b)${side}(_|\\b|$)|${side === "l" ? "left" : "right"}`).test(s.name.toLowerCase()))) sc += 2;
+    if (/prv|ring|ptv|ctv|gtv|avoid|^z/.test(n)) sc -= 2; if (sc > score) { score = sc; best = i; } });
+  return best;
+}
+function vDVH(c){
+  const site = CFG[S.site], comps = S.boost ? ["a","b"] : ["a"];
+  if (!DVH || DVH.c !== c) return `<div class="card"><h3>Import DVH from planning system <small>CSV / TXT</small></h3>
+    <p class="note">Export the DVH from RayStation, Monaco, Eclipse or Oncentra (cumulative or differential, absolute or relative volume) and load it here. The app reads each structure, works out Dmax, D0.03cc, D0.1cc, D0.5cc, D1cc, D2cc, D10cc and Dmean, and fills the organ doses for this course.</p>
+    ${S.boost ? `<div class="quick" role="group" aria-label="Component">${comps.map(k => `<button type="button" data-dvhk="${c}${k}" class="${(S["dvhk" + c] || "a") === k ? "on" : ""}">${esc(k === "a" ? site.comp1 : site.comp2)}</button>`).join("")}</div>` : ""}
+    <label class="btn" style="cursor:pointer">Choose DVH file<input type="file" data-dvhfile="${c}" accept=".csv,.txt,.dvh,text/plain,text/csv" hidden></label></div>`;
+  const k = DVH.k, P2 = DVH.structs.map((s, i) => prepStruct(s, DVH.over, DVH.tv[i]));
+  const ok = P2.filter(x => x.ok), first = ok[0] || P2[0] || {};
+  const sel = (key, opts, cur) => `<select data-dvhover="${key}">${opts.map(([v, l]) => `<option value="${v}"${v === cur ? " selected" : ""}>${l}</option>`).join("")}</select>`;
+  return `<div class="card slot"><h3>DVH: ${esc(DVH.file)} <small>${DVH.structs.length} structures</small></h3>
+    <p class="note">Detected: ${first.type === "diff" ? "differential" : "cumulative"} DVH · dose in ${esc(first.doseUnit || "?")} · volume in ${esc(first.volUnit || "?")}. Applies to <b>Course ${c} – ${esc(k === "a" ? site.comp1 : site.comp2)}</b> as total physical dose.</p>
+    <div class="row" style="grid-template-columns:1fr 1fr 1fr">
+      <label class="f">DVH type${sel("type", [["auto","Auto"],["cum","Cumulative"],["diff","Differential"]], DVH.over.type)}</label>
+      <label class="f">Dose unit${sel("dose", [["auto","Auto"],["Gy","Gy"],["cGy","cGy"]], DVH.over.dose)}</label>
+      <label class="f">Volume unit${sel("vol", [["auto","Auto"],["cc","cc"],["%","%"]], DVH.over.vol)}</label></div>
+    <div style="overflow-x:auto"><table style="border-collapse:collapse;font-size:12.5px;width:100%;font-variant-numeric:tabular-nums">
+      <thead><tr>${["Structure","Vol (cc)"].concat(DVH_METRICS).map(h => `<th style="text-align:left;padding:5px;border-bottom:1px solid var(--line);white-space:nowrap">${h}</th>`).join("")}</tr></thead>
+      <tbody>${DVH.structs.map((s, i) => { const x = P2[i]; return `<tr><td style="padding:5px;border-bottom:1px solid var(--line);font-weight:600;white-space:nowrap">${esc(s.name)}</td>${x.ok
+        ? `<td style="padding:5px;border-bottom:1px solid var(--line)">${f1(x.total)}</td>` + DVH_METRICS.map(mm => `<td style="padding:5px;border-bottom:1px solid var(--line)">${f1(x.m[mm])}</td>`).join("")
+        : `<td colspan="${DVH_METRICS.length + 1}" style="padding:5px;border-bottom:1px solid var(--line)">${x.needTV ? `Volume (cc): <input data-dvhtv="${i}" inputmode="decimal" style="width:90px;padding:4px" value="${esc(DVH.tv[i] ?? "")}">` : esc(x.why)}</td>`}</tr>`; }).join("")}</tbody></table></div>
+    <p class="note">Doses in Gy. “–” = structure smaller than that volume.</p>
+    <h3 style="margin-top:4px">Match structures to organs</h3>
+    ${active().map(([o, i]) => { const j = DVH.map[i] ?? -1, x = j >= 0 ? P2[j] : null, v = x && x.ok ? x.m[o.m] : NaN;
+      return `<div class="row" style="grid-template-columns:1fr 1.3fr;align-items:end"><label class="f">${esc(o.n)} <small>(${esc(o.m)})</small><select data-dvhmap="${i}"><option value="-1">— not from this DVH —</option>${DVH.structs.map((s, q) => `<option value="${q}"${q === j ? " selected" : ""}>${esc(s.name)}</option>`).join("")}</select></label>
+        <div class="res"><span>${esc(o.m)}</span><b>${Number.isFinite(v) ? f1(v) + " Gy" : "–"}</b></div></div>`; }).join("")}
+    <div class="actions"><button type="button" class="btn primary" data-act="dvhApply">Apply to Course ${c}</button><button type="button" class="btn ghost" data-act="dvhClose">Cancel</button></div>
+    <p class="note">Doses are filled as TOTAL physical dose at each organ's metric; enter the number of fractions above. Method is recorded as “DVH extracted from TPS – metric summation”.</p></div>`;
+}
+function dvhApply(){
+  const c = DVH.c, k = DVH.k, C = S["c" + c]; let n = 0;
+  const P2 = DVH.structs.map((s, i) => prepStruct(s, DVH.over, DVH.tv[i]));
+  active().forEach(([o, i]) => { const j = DVH.map[i]; if (!(j >= 0)) return; const x = P2[j]; if (!x || !x.ok) return;
+    const v = x.m[o.m]; if (!Number.isFinite(v)) return; o[k + c] = Math.round(v * 100) / 100; n++;
+    o["src" + k + c] = `${DVH.structs[j].name} (${DVH.file})`; });
+  C[k + "m"] = "total"; if (!C.meth) C.meth = P.methods[2];
+  C["dvh" + k] = `${DVH.file} · ${new Date().toISOString().slice(0, 10)}`;
+  DVH = null; render(); toast(`${n} organ dose${n === 1 ? "" : "s"} filled from DVH`);
+}
+function dvhLoad(c, file){
+  const r = new FileReader();
+  r.onload = () => { const structs = parseDVH(String(r.result));
+    if (!structs.length) { toast("No DVH data found in this file"); return; }
+    const k = S.boost ? (S["dvhk" + c] || "a") : "a";
+    DVH = { c, k, file: file.name, structs, over: { type: "auto", dose: "auto", vol: "auto" }, map: {}, tv: {} };
+    active().forEach(([o, i]) => { DVH.map[i] = autoMatch(o.n, structs); });
+    render(); toast(`${structs.length} structures read`); };
+  r.readAsText(file);
+}
+
+/* ---------- versioning ---------- */
+const APP_VERSION = "1.7.0";
+const PROTO_VERSION = (P && P.version) || "2026-10-21";
+const verLine = () => `App v${APP_VERSION} · Protocol tables ${PROTO_VERSION}`;
+function lastSelfTest(){ try { return JSON.parse(localStorage.getItem("boc-rert-selftest") || "null"); } catch (_) { return null; } }
+
+/* ---------- alternative models and ranges ---------- */
+// LQ-L (Astrahan 2008): linear above transition dose dT per fraction
+function compLQL(D, n, ab, dT){ D = numv(D); n = numv(n); ab = numv(ab); dT = numv(dT);
+  if (!Number.isFinite(D) || !(n > 0) || !(ab > 0)) return null; const d = D / n;
+  if (!(dT > 0) || d <= dT) return D * (d + ab) / (2 + ab);
+  const bedPerFx = dT + dT * dT / ab + (1 + 2 * dT / ab) * (d - dT); return n * bedPerFx / (1 + 2 / ab); }
+function courseWith(o, c, f){ const C = S["c" + c]; const a = f(totalD(o, c, "a"), C.na); const b = S.boost ? f(totalD(o, c, "b"), C.nb) : null;
+  return (a === null && b === null) ? NaN : (a || 0) + (b || 0); }
+const dTval = () => { const v = numv(S.dT); return v > 0 ? v : 6; };
+function lqlCum(o){ const r = Math.min(100, Math.max(0, numv(o.r) || 0)) / 100;
+  const f = (D, n) => compLQL(D, n, o.ab, dTval()); const e1 = courseWith(o, 1, f); let e2 = courseWith(o, 2, f); if (!Number.isFinite(e2) && Number.isFinite(e1)) e2 = 0;
+  return { e1, e2, cum: e1 * (1 - r) + e2 }; }
+function rangeOf(o){
+  const ab = numv(o.ab); if (!(ab > 0)) return null; const r = Math.min(100, Math.max(0, numv(o.r) || 0)) / 100;
+  const vals = [Math.max(0.5, ab - 1), ab, ab + 1].map(x => { const f = (D, n) => comp(D, n, x); const e1 = courseWith(o, 1, f); let e2 = courseWith(o, 2, f); if (!Number.isFinite(e2) && Number.isFinite(e1)) e2 = 0; return [e1, e2]; });
+  if (!vals.every(([e1]) => Number.isFinite(e1))) return null;
+  const best = Math.min(...vals.map(([e1, e2]) => e1 * (1 - r) + e2)), worst = Math.max(...vals.map(([e1, e2]) => e1 + e2));
+  const lim = limOf(o); return { best, worst, bestPct: lim > 0 ? best / lim * 100 : NaN, worstPct: lim > 0 ? worst / lim * 100 : NaN, abLo: Math.max(0.5, ab - 1), abHi: ab + 1 };
+}
+function rangeLine(o){ const X = rangeOf(o); if (!X) return "";
+  const lim = limOf(o), tag = lim > 0 && X.worst > lim ? ` <b style="color:var(--bad)">worst case exceeds the limit</b>` : "";
+  let s = `Range ${f1(X.best)}–${f1(X.worst)} Gy (best: chosen recovery, worst: no recovery; α/β ${X.abLo}–${X.abHi})${tag}`;
+  if (hiFx()) { const L = lqlCum(o); s += ` · LQ-L (dT ${dTval()} Gy): ${f1(L.cum)} Gy`; }
+  return s; }
+
+/* ---------- Course 2 prescription options ---------- */
+let PRESMODE = "both";
+function c2Fractions(){ const nA = numv(S.c2.na), nB = numv(S.c2.nb); const planned = nA > 0 ? nA : (S.boost && nB > 0 ? nB : null);
+  return [...new Set([planned, 30, 25, 20, 15, 10, 5, 3, 1].filter(Boolean))]; }
+function presOptions(o){
+  const R = calcOrgan(o), lim = R.lim, ab = numv(o.ab); if (!(lim > 0) || !Number.isFinite(R.e1)) return null;
+  const remW = lim - R.res, remWo = lim - R.e1;
+  return { remW, remWo, rows: c2Fractions().map(n => ({ n, w: solveD(remW, n, ab), wo: solveD(remWo, n, ab) })) };
+}
+function vPresc(){
+  const list = active().map(([o]) => [o, presOptions(o)]).filter(([, X]) => X);
+  if (!list.length) return `<div class="card"><h3>Course 2 prescription options</h3><p class="note">Set a limit and enter Course 1 doses to see the maximum Course 2 doses.</p></div>`;
+  const ns = c2Fractions(), planned = ns[0] !== 30 ? ns[0] : null;
+  const cell = (v, n) => !Number.isFinite(v) ? "–" : v <= 0 ? `<b style="color:var(--bad)">0</b>` : `${f1(v)}<br><small style="color:var(--muted)">${(v / n).toFixed(2)}/fx</small>`;
+  const show = PRESMODE === "both" ? ["w", "wo"] : [PRESMODE];
+  return `<div class="card"><h3>Course 2 prescription options <small>max physical dose to each organ</small></h3>
+    <p class="note">Maximum total physical dose each organ (at its metric) may receive in Course 2 for each number of fractions, from the EQD2 still allowed: limit − Course 1 EQD2 with the chosen recovery, and with no recovery (worst case). Single-component Course 2 assumed.</p>
+    <div class="quick" role="group" aria-label="Recovery assumption">${[["both","Both"],["w","With recovery"],["wo","Without recovery"]].map(([k, l]) => `<button type="button" data-pres="${k}" class="${PRESMODE === k ? "on" : ""}">${l}</button>`).join("")}</div>
+    <div style="overflow-x:auto"><table style="border-collapse:collapse;font-size:12.5px;width:100%;font-variant-numeric:tabular-nums">
+      <thead><tr><th style="text-align:left;padding:5px;border-bottom:1px solid var(--line)">Organ</th><th style="text-align:left;padding:5px;border-bottom:1px solid var(--line)">EQD2 left</th>${ns.map(n => `<th style="padding:5px;border-bottom:1px solid var(--line);white-space:nowrap">${n} fx${n === planned ? " ★" : ""}</th>`).join("")}</tr></thead>
+      <tbody>${list.map(([o, X]) => show.map((k, j) => `<tr><td style="padding:5px;border-bottom:1px solid var(--line);font-weight:600;white-space:nowrap">${j === 0 ? esc(o.n) : ""}<br><small style="color:var(--muted);font-weight:400">${k === "w" ? `with recovery (${numv(o.r) || 0} %)` : "without recovery"}</small></td>
+        <td style="padding:5px;border-bottom:1px solid var(--line)">${f1(k === "w" ? X.remW : X.remWo)}</td>${X.rows.map(rw => `<td style="padding:5px;border-bottom:1px solid var(--line);text-align:center">${cell(rw[k], rw.n)}</td>`).join("")}</tr>`).join("")).join("")}</tbody></table></div>
+    <p class="note">Gy total (per fraction below). ★ = Course 2 fractions entered. EQD2 by LQ; for ≤5 fractions above 8 Gy/fx treat values with caution (see LQ-L in Results).</p></div>`;
+}
+
+/* ---------- sign-off ---------- */
+function sign(){ if (!S.sign) S.sign = { calcBy: "", calcAt: "", checkBy: "", checkAt: "" }; return S.sign; }
+function vSign(){
+  const g = sign(), rev = S.rev || 1;
+  if (S.locked) return `<div class="card slot"><h3>Sign-off <small>version ${rev}</small></h3>
+    <p class="note" style="color:var(--ink)"><b>Approved and locked.</b> Calculated by ${esc(g.calcBy)} (${esc(fmtDate(g.calcAt))}) · Checked by ${esc(g.checkBy)} (${esc(fmtDate(g.checkAt))}).</p>
+    <p class="note">Inputs are read-only. To change anything, create a new version; the approved version stays in the archive.</p>
+    <div class="actions"><button type="button" class="btn primary" data-act="report">PDF report (BOC template)</button><button type="button" class="btn" data-act="newver">Create new version</button></div></div>`;
+  return `<div class="card"><h3>Sign-off <small>version ${rev}</small></h3>
+    <div class="row two"><label class="f">Calculated by (name / initials)<input id="calcBy" value="${esc(g.calcBy)}" autocomplete="off"></label>
+    <label class="f">Checked by (second physicist)<input id="checkBy" value="${esc(g.checkBy)}" autocomplete="off"></label></div>
+    <p class="note">${g.calcAt ? `Marked calculated ${esc(fmtDate(g.calcAt))}. ` : ""}The checker must be a different person. Approving saves this version to the archive and locks it.</p>
+    <div class="actions"><button type="button" class="btn" data-act="markCalc">Mark calculated</button><button type="button" class="btn primary" data-act="approve">Approve &amp; lock</button></div>
+    <div class="actions" style="grid-template-columns:1fr"><button type="button" class="btn" data-act="report">PDF report (BOC template)</button></div></div>`;
+}
+
+/* ---------- self-test ---------- */
+function selfTest(){
+  const T = [], near = (a, b, tol = 0.051) => Number.isFinite(a) && Math.abs(a - b) <= tol;
+  const add = (name, got, exp, tol) => T.push({ name, got, exp, ok: near(got, exp, tol) });
+  add("EQD2 45 Gy / 25 fx, α/β 3", comp(45, 25, 3), 43.2);
+  add("EQD2 HDR 7 Gy × 4 (28 Gy), α/β 3", comp(28, 4, 3), 56.0);
+  add("EQD2 60 Gy / 30 fx, α/β 2", comp(60, 30, 2), 60.0);
+  add("Inverse: max dose for 40 Gy EQD2 in 10 fx, α/β 2", solveD(40, 10, 2), 31.23, 0.01);
+  add("Inverse round trip (EQD2 of solved dose)", comp(solveD(57.8, 30, 2), 30, 2), 57.8, 0.001);
+  add("LQ-L 10 Gy × 3, α/β 3, dT 6 Gy", compLQL(30, 3, 3, 6), 68.4);
+  add("LQ-L equals LQ below dT (2 Gy × 30)", compLQL(60, 30, 3, 6), 60.0);
+  // DVH reader: uniform 50 cc structure, 10–60 Gy
+  const dv = []; for (let x = 0; x <= 75; x += 0.5) dv.push([x * 100, Math.max(0, Math.min(50, 50 * (60 - x) / 50))]);
+  const txtCC = "Structure: Rectum\nVolume [cm³]: 50.0\nDose [cGy]\tRelative dose [%]\tStructure Volume [cm³]\n" + dv.map(([d, v]) => `${d}\t0\t${v}`).join("\n");
+  const txtPct = "Structure: Rectum\nVolume [cm³]: 50.0\nDose [cGy]\tRelative dose [%]\tRatio of Total Structure Volume [%]\n" + dv.map(([d, v]) => `${d}\t0\t${v * 2}`).join("\n");
+  const diff = dv.map(([d, v], i) => [d / 100, v - (i + 1 < dv.length ? dv[i + 1][1] : 0)]);
+  const txtDiff = "Dose (Gy),Rectum (cc)\n" + diff.map(([d, v]) => `${d},${v}`).join("\n");
+  [["cumulative cc", txtCC], ["relative %", txtPct], ["differential", txtDiff]].forEach(([lab, txt]) => {
+    const s = parseDVH(txt)[0], x = s ? prepStruct(s, { type: "auto", dose: "auto", vol: "auto" }) : { ok: false };
+    add(`DVH ${lab}: D2cc`, x.ok ? x.m["D2cc"] : NaN, 58.0); add(`DVH ${lab}: D1cc`, x.ok ? x.m["D1cc"] : NaN, 59.0);
+    add(`DVH ${lab}: Dmax`, x.ok ? x.m["Dmax"] : NaN, 60.0); add(`DVH ${lab}: Dmean`, x.ok ? x.m["Dmean"] : NaN, 35.0, 0.3); });
+  // Example cases (hand-checked values)
+  const ex = (site, protoId, organ, exp) => withState(null, () => { exampleState(site); if (protoId) applyProto(protoId);
+    const o = S.organs.find(z => z.n === organ); return add(`${site} example (${protoId || "BOC"}): ${organ} cumulative`, o ? calcOrgan(o).cum : NaN, exp); });
+  ex("HN", null, "Spinal cord", 40.2); ex("HN", null, "Carotid artery", 121.8); ex("HN", null, "Mandible", 99.2);
+  ex("PEL", null, "Vagina", 127.2); ex("PEL", null, "Bladder", 95.0); ex("CNS", null, "Brain", 97.5);
+  withState(null, () => { exampleState("HN"); applyProto("ARS"); const o = S.organs[0]; add("HN ARS: spinal cord limit after 2 y", limOf(o), 54, 0.001); });
+  const res = { at: new Date().toISOString(), version: APP_VERSION, proto: PROTO_VERSION, pass: T.every(t => t.ok), n: T.length, failed: T.filter(t => !t.ok).length, tests: T };
+  try { localStorage.setItem("boc-rert-selftest", JSON.stringify({ at: res.at, version: res.version, pass: res.pass, n: res.n })); } catch (_) {}
+  return res;
+}
+let LASTTEST = null;
+function vSelfTest(){
+  const L = lastSelfTest();
+  return `<div class="card"><h3>Self-test <small>${esc(verLine())}</small></h3>
+    <p class="note">Runs ${LASTTEST ? LASTTEST.n : 28} reference checks: EQD2 and inverse formulas, LQ-L, DVH reading (cumulative, relative, differential) and the hand-checked example cases. Run it after every update.</p>
+    ${L ? `<p class="note">Last run ${esc(fmtDate(L.at))} on v${esc(L.version)}: <b style="color:${L.pass ? "var(--ok)" : "var(--bad)"}">${L.pass ? "all passed" : "FAILED"}</b></p>` : ""}
+    <button type="button" class="btn primary" data-act="selftest">Run self-test</button>
+    ${LASTTEST ? `<div class="alert ${LASTTEST.pass ? "" : "bad"}" style="${LASTTEST.pass ? "background:var(--ok-bg);color:var(--ok)" : ""}">${LASTTEST.pass ? `All ${LASTTEST.n} checks passed` : `${LASTTEST.failed} of ${LASTTEST.n} checks failed – do not use clinically; contact Medical Physics`}</div>
+    <div style="overflow-x:auto"><table style="border-collapse:collapse;font-size:12px;width:100%;font-variant-numeric:tabular-nums">${LASTTEST.tests.map(t => `<tr><td style="padding:4px;border-bottom:1px solid var(--line)">${t.ok ? "✔" : "✘"}</td><td style="padding:4px;border-bottom:1px solid var(--line)">${esc(t.name)}</td><td style="padding:4px;border-bottom:1px solid var(--line);text-align:right">${Number.isFinite(t.got) ? t.got.toFixed(2) : "–"}</td><td style="padding:4px;border-bottom:1px solid var(--line);text-align:right;color:var(--muted)">${t.exp.toFixed(2)}</td></tr>`).join("")}</table></div>` : ""}</div>`;
+}
+
+/* ---------- BOC-template report ---------- */
+function buildReport(){
+  const p = proto(), m = months(), g = sign(), st = lastSelfTest(), site = CFG[S.site];
+  const list = active().map(([o]) => [o, calcOrgan(o)]).filter(([, R]) => Number.isFinite(R.cum));
+  const crs = c => { const C = S["c" + c]; return `<tr><th>Course ${c}</th><td>${c === 1 ? "ended " + esc(S.c1end || "–") : "starts " + esc(S.c2start || "–")}</td><td>${esc(C.tps || "–")}</td><td>${esc(C.meth || "–")}${C.reg ? " · " + esc(C.reg) : ""}${[C.dvha, C.dvhb].filter(Boolean).length ? "<br>DVH: " + esc([C.dvha, C.dvhb].filter(Boolean).join(", ")) : ""}</td><td>${esc(site.comp1)} ${esc(C.na || "–")} fx${S.boost ? ` · ${esc(site.comp2)} ${esc(C.nb || "–")} fx` : ""}</td></tr>`; };
+  const ns = c2Fractions();
+  return `<div class="rp">
+  <div class="rp-h"><div><div class="rp-org">ROYAL MEDICAL SERVICES · BAHRAIN DEFENCE FORCE<br>Bahrain Oncology Center · Department of Radiation Oncology · Medical Physics</div>
+    <div class="rp-t">${esc(site.title)} · Cumulative EQD2 Assessment</div></div>
+    <div class="rp-no">Form no. RMS.BOC.RON.PHY.0__<br>Rev. 02 · ${esc(new Date().toISOString().slice(0, 10))}<br>Case ${esc(S.caseId || "not archived")} · v${S.rev || 1}</div></div>
+  <div class="rp-tag">UNDER TESTING · ${esc(CREDIT)}</div>
+  <table class="rp-g"><tr><th>Patient</th><td>${esc(S.name || "–")}</td><th>MRN / CPR</th><td>${esc(S.mrn || "–")}</td></tr>
+    <tr><th>Protocol</th><td colspan="3">${esc(p.label)}${p.refs.length ? " — " + esc(p.refs.map(refShort).join("; ")) : ""}</td></tr>
+    <tr><th>Interval</th><td>${Number.isFinite(m) ? m.toFixed(1) + " months" : "–"}</td><th>Status</th><td>${S.locked ? "Approved" : g.calcAt ? "Calculated, awaiting check" : "Draft"}</td></tr></table>
+  <h4>Treatment courses</h4>
+  <table class="rp-g"><tr><th></th><th>Date</th><th>Planning system</th><th>OAR dose source</th><th>Fractions</th></tr>${crs(1)}${crs(2)}</table>
+  <h4>Cumulative EQD2 per organ at risk</h4>
+  <table class="rp-g rp-n"><tr><th>Organ</th><th>Metric</th><th>α/β</th><th>EQD2₁</th><th>Rec. %</th><th>Residual EQD2₁</th><th>EQD2₂</th><th>Cum. no rec.</th><th>Cum. with rec.</th><th>Range (best–worst)</th><th>Limit</th><th>% limit</th><th>Status</th></tr>
+    ${list.map(([o, R]) => { const X = rangeOf(o); return `<tr><td class="l">${esc(o.n)}</td><td>${esc(o.m)}</td><td>${esc(o.ab)}</td><td>${f1(R.e1)}</td><td>${R.r}</td><td>${f1(R.res)}</td><td>${f1(R.e2)}</td><td>${f1(R.nom)}</td><td><b>${f1(R.cum)}</b></td><td>${X ? f1(X.best) + "–" + f1(X.worst) : "–"}</td><td>${R.lim > 0 ? f1(R.lim) : "–"}</td><td>${Number.isFinite(R.pct) ? R.pct.toFixed(0) : "–"}</td><td class="s-${R.st}">${R.lab}</td></tr>`; }).join("")}</table>
+  ${hiFx() ? `<p class="rp-w">Dose per fraction above 8 Gy entered. LQ-L (dT ${dTval()} Gy) cumulative: ${list.map(([o]) => `${esc(o.n)} ${f1(lqlCum(o).cum)} Gy`).join("; ")}.</p>` : ""}
+  ${doubleCount() ? `<p class="rp-w">Recovery entered although the protocol limits apply to the full Course 1 dose.</p>` : ""}
+  <h4>Course 2 allowance: maximum physical dose per organ (Gy total)</h4>
+  <table class="rp-g rp-n"><tr><th>Organ</th><th>Assumption</th><th>EQD2 left</th>${ns.map(n => `<th>${n} fx</th>`).join("")}</tr>
+    ${active().map(([o]) => [o, presOptions(o)]).filter(([, X]) => X).map(([o, X]) => ["w", "wo"].map((k, j) => `<tr><td class="l">${j ? "" : esc(o.n)}</td><td>${k === "w" ? `with rec. ${numv(o.r) || 0} %` : "no recovery"}</td><td>${f1(k === "w" ? X.remW : X.remWo)}</td>${X.rows.map(rw => `<td>${Number.isFinite(rw[k]) ? f1(rw[k]) : "–"}</td>`).join("")}</tr>`).join("")).join("")}</table>
+  <p class="rp-f">EQD2 = D(d + α/β)/(2 + α/β); cumulative = EQD2₁(1 − recovery) + EQD2₂; maximum dose solved from the remaining EQD2 at each fraction number. Range: α/β ±1 Gy, best with chosen recovery, worst without recovery. Results support, and do not replace, clinical and physics review.</p>
+  <h4>Sign-off</h4>
+  <table class="rp-g rp-sig"><tr><th>Role</th><th>Name</th><th>Signature</th><th>Date</th></tr>
+    <tr><td class="l">Calculated by (Medical Physicist)</td><td>${esc(g.calcBy || "")}</td><td></td><td>${g.calcAt ? esc(g.calcAt.slice(0, 10)) : ""}</td></tr>
+    <tr><td class="l">Checked by (Medical Physicist)</td><td>${esc(g.checkBy || "")}</td><td></td><td>${g.checkAt ? esc(g.checkAt.slice(0, 10)) : ""}</td></tr>
+    <tr><td class="l">Radiation Oncologist</td><td></td><td></td><td></td></tr>
+    <tr><td class="l">Head of Medical Physics</td><td></td><td></td><td></td></tr>
+    <tr><td class="l">Head of Radiation Oncology</td><td></td><td></td><td></td></tr></table>
+  <div class="rp-foot"><span>Bahrain Oncology Center · Medical Physics</span><span>${esc(verLine())} · Self-test ${st ? (st.pass ? "passed " : "FAILED ") + esc(st.at.slice(0, 10)) : "not run"}</span><span>Controlled document · uncontrolled when printed</span></div>
+  </div>`;
+}
+function printReport(){ let el = $("report"); if (!el) { el = document.createElement("div"); el.id = "report"; document.body.appendChild(el); }
+  el.innerHTML = buildReport(); document.body.classList.add("printing-report");
+  const done = () => { document.body.classList.remove("printing-report"); window.removeEventListener("afterprint", done); };
+  window.addEventListener("afterprint", done); setTimeout(() => { try { window.print(); } catch (_) {} setTimeout(done, 1500); }, 100); }
+
 /* ---------- views ---------- */
 function vSetup(){
   const p = proto(), m = months();
@@ -1357,6 +1772,7 @@ function vSetup(){
   <div class="card"><h3>Constraint protocol <small>sets α/β, metric, limit, recovery</small></h3>
     <select data-k="protoSel" aria-label="Protocol">${P.sites[S.site].protocols.map(x => `<option value="${x.id}"${x.id===S.proto?" selected":""}>${esc(x.label)}</option>`).join("")}</select>
     <p class="note">${esc(p.desc)}${p.refs.length ? ` <b>Source:</b> ${p.refs.map(refShort).join("; ")}.` : ""}</p>
+    <label class="f">LQ-L transition dose dT (Gy/fx) for SBRT/HDR check<input data-k="dT" value="${esc(S.dT ?? 6)}" inputmode="decimal" style="max-width:120px"></label>
     <p class="note">ESTRO–EORTC 2022 and ASTRO give no organ-specific numbers; their consensus sets the framework (EQD2/BED summation, reporting, conservative assumptions). See Evidence.</p>
   </div>
   <div class="card"><div class="toggle"><span>Courses include a second component<br><small style="color:var(--muted)">${esc(CFG[S.site].comp2)} in addition to ${esc(CFG[S.site].comp1)}</small></span>
@@ -1386,6 +1802,7 @@ function vCourse(c){
     <label class="f">Registration / summation software (if used)<input data-c="${c}" data-f="reg" value="${esc(C.reg)}" placeholder="e.g. RayStation DIR, MIM"></label>
     ${C.meth && C.meth.startsWith("Estimated") ? `<div class="alert warn">ESTRO–EORTC: with no previous plan, assume the prescription dose reached the OAR (conservative).</div>` : ""}
   </div>
+  ${vDVH(c)}
   ${c === 2 ? `<div class="card slot"><h3>Dose remaining for Course 2 <small>limit − residual EQD2₁</small></h3>
     <p class="note">Maximum physical dose Course 2 can deliver to each organ at its metric, for the fractions entered below. Change the fractions and it updates.</p>
     ${active().map(([o, i]) => `<div><b>${esc(o.n)}</b><p class="note" data-live="rem-${i}">${remLine(o)}</p></div>`).join("")}</div>` : ""}
@@ -1424,12 +1841,13 @@ function vResults(){
   const cnt = k => list.filter(([, R]) => R.st === k).length;
   const max = Math.max(1, ...list.map(([, R]) => Math.max(R.nom, R.lim > 0 ? R.lim : 0))) * 1.05;
   const m = months(), p = proto();
-  const crs = c => { const C = S["c"+c]; return `Course ${c}: ${esc(C.tps || "planning system not recorded")} · ${esc(C.meth || "data method not recorded")}${C.reg ? " · " + esc(C.reg) : ""}`; };
+  const crs = c => { const C = S["c"+c]; return `Course ${c}: ${esc(C.tps || "planning system not recorded")} · ${esc(C.meth || "data method not recorded")}${C.reg ? " · " + esc(C.reg) : ""}${[C.dvha, C.dvhb].filter(Boolean).length ? " · DVH " + esc([C.dvha, C.dvhb].filter(Boolean).join(", ")) : ""}`; };
   return `<h2>Results</h2><p class="lead">${esc(S.name || "Patient")}${S.mrn ? " · " + esc(S.mrn) : ""} · ${esc(CFG[S.site].title)} · interval ${Number.isFinite(m) ? m.toFixed(1) + " months" : "–"}</p>
   <div class="card"><h3>Protocol <small>${p.refs.map(refShort).join("; ") || "local"}</small></h3><p class="note" style="color:var(--ink)">${esc(p.label)}</p>
     <p class="note">${crs(1)}<br>${crs(2)}</p>
     ${hiFx() ? `<div class="alert warn">Dose per fraction above 8 Gy entered: EQD2 is less reliable at SRS/SBRT doses.</div>` : ""}
     ${doubleCount() ? `<div class="alert bad">Recovery entered although this protocol's limits apply to the full Course 1 dose.</div>` : ""}</div>
+  ${vSign()}
   <div class="summary"><div class="tile ok"><b>${cnt("ok")}</b><span>Within</span></div><div class="tile warn"><b>${cnt("warn")}</b><span>Caution</span></div><div class="tile bad"><b>${cnt("bad")}</b><span>Exceeds</span></div></div>
   ${list.length ? "" : `<div class="card"><b>No results yet.</b><p class="note">Enter fractions and doses in Course 1 and Course 2.</p></div>`}
   ${list.sort((a, b) => (numv(b[1].pct) || 0) - (numv(a[1].pct) || 0)).map(([o, R]) => `<div class="rc ${R.st}">
@@ -1437,18 +1855,21 @@ function vResults(){
     <div class="track" role="img" aria-label="${esc(o.n)} cumulative ${f1(R.cum)} Gy"><i class="a" style="width:${R.res / max * 100}%"></i><i class="b" style="width:${R.e2 / max * 100}%"></i>${R.lim > 0 ? `<span class="lim" style="left:${R.lim / max * 100}%"></span>` : ""}</div>
     <div class="nums"><span>EQD2₁<b>${f1(R.e1)}</b></span><span>After ${R.r} %<b>${f1(R.res)}</b></span><span>EQD2₂<b>${f1(R.e2)}</b></span><span>Cumulative<b>${f1(R.cum)}</b></span></div>
     <div class="meta" style="font-size:12.5px">Course 2 allowance: ${remLine(o)}</div>
+    <div class="meta" style="font-size:12.5px">${rangeLine(o)}</div>
     <div class="meta" style="font-size:12.5px;color:var(--muted)">Without recovery ${f1(R.nom)} Gy · limit ${R.lim > 0 ? f1(R.lim) + " Gy" : "none"} · ${esc(o.m)}, α/β ${esc(o.ab)}${o.note ? " · " + esc(o.note) : ""}</div></div>`).join("")}
   <div class="legend"><span><i style="background:var(--c1)"></i>Course 1 after recovery</span><span><i style="background:var(--c2)"></i>Course 2</span><span><i style="background:var(--bad);width:3px"></i>Limit</span></div>
-  <div class="actions noprint"><button type="button" class="btn primary" data-act="copy">Copy summary</button><button type="button" class="btn" data-act="print">Print / PDF</button></div>
+  ${vPresc()}
+  <div class="actions noprint"><button type="button" class="btn primary" data-act="archive">${loadArch().some(x => x.id === archId()) ? "Update archived case" : "Save to archive"}</button><button type="button" class="btn" data-act="copy">Copy summary</button></div>
+  <div class="actions noprint" style="grid-template-columns:1fr"><button type="button" class="btn" data-act="report">PDF report (BOC template)</button></div>
   <p class="note">EQD2 = D × (D/n + α/β) / (2 + α/β), summed over components. Cumulative = EQD2₁ × (1 − recovery) + EQD2₂. Status: within ≤ 90 %, caution 90–100 %, exceeds &gt; 100 % of limit. Results support, and do not replace, clinical and physics review.</p>
-  <p class="foot">${CREDIT}<br>RMS.BOC.RON.PHY.0__ · Rev. 01 · Oct 2026</p>`;
+  <p class="foot">${CREDIT}<br>${esc(verLine())} · RMS.BOC.RON.PHY.0__ · Rev. 02</p>`;
 }
 function vEvidence(){
   const site = P.sites[S.site], used = new Set(["ESTRO22","ESTRO23","ASTRO24"].concat(S.site === "CNS" ? ["EANO25"] : []));
   site.protocols.forEach(p => p.refs.forEach(r => used.add(r)));
   const cell = (v) => v.limS == null ? `<span style="color:var(--muted)">–</span>` : `${v.limS}${v.limL != null ? ` → ${v.limL} <small>(≥${v.cut} mo)</small>` : ""}<br><small>${esc(v.m)} · α/β ${v.ab}</small>`;
   const prots = site.protocols.filter(p => p.id !== "BOC");
-  return `<h2>Evidence</h2><p class="lead">${SITENAME[S.site]}: cumulative EQD2 limits (Gy) by protocol, recovery evidence, and references.</p>
+  return `<h2>Evidence</h2>${vSelfTest()}<p class="lead">${SITENAME[S.site]}: cumulative EQD2 limits (Gy) by protocol, recovery evidence, and references.</p>
   <div class="card"><h3>What the major bodies say</h3>
     <p class="note" style="color:var(--ink)"><b>ESTRO–EORTC (2022):</b> defines Type 1 / Type 2 re-irradiation and reporting; sum doses as EQD2/BED with relevant α/β; record the source and method of the previous dose; if the previous plan is unavailable, assume the prescription dose reached the OAR. It gives <b>no organ-specific cumulative limits</b>. Survey (2023): the most common minimum interval used is 6–12 months.</p>
     <p class="note" style="color:var(--ink)"><b>ASTRO:</b> no re-irradiation guideline for these sites; its 2023 education panel summarised the ESTRO–EORTC consensus. The US society guidance used here is the <b>American Radium Society</b> AUC (H&N).</p>
@@ -1463,10 +1884,75 @@ function vEvidence(){
   <p class="foot">${CREDIT}</p>`;
 }
 
+/* ---------- archive ---------- */
+function loadArch(){ try { return JSON.parse(localStorage.getItem(ARCH_KEY) || "[]"); } catch (_) { return []; } }
+function saveArch(a){ try { localStorage.setItem(ARCH_KEY, JSON.stringify(a)); return true; } catch (_) { toast("Could not save: storage is full or blocked"); return false; } }
+function withState(st, fn){ const keep = S; S = st; try { return fn(); } finally { S = keep; } }
+function caseSummary(){
+  const list = active().map(([o]) => [o, calcOrgan(o)]).filter(([, R]) => Number.isFinite(R.cum));
+  const worst = list.some(([, R]) => R.st === "bad") ? "bad" : list.some(([, R]) => R.st === "warn") ? "warn" : list.length ? "ok" : "na";
+  return { worst, n: list.length, exceeds: list.filter(([, R]) => R.st === "bad").map(([o]) => o.n) };
+}
+function archId(){ return S.caseId ? `${S.caseId}-v${S.rev || 1}` : null; }
+function archiveCurrent(){
+  const a = loadArch(); if (!S.caseId) S.caseId = "C" + Date.now().toString(36).toUpperCase();
+  const snap = JSON.parse(JSON.stringify(S)); snap.step = 4;
+  const rec = { id: archId(), caseId: S.caseId, rev: S.rev || 1, appVersion: APP_VERSION, protoVersion: PROTO_VERSION, signed: S.locked ? `${sign().calcBy} / ${sign().checkBy}` : "", savedAt: new Date().toISOString(), site: S.site, proto: proto().label, name: S.name, mrn: S.mrn, c1end: S.c1end, c2start: S.c2start, sum: caseSummary(), state: snap };
+  const i = a.findIndex(x => x.id === rec.id); if (i >= 0) a[i] = rec; else a.unshift(rec);
+  if (saveArch(a)) toast(i >= 0 ? "Archived case updated" : "Saved to archive");
+}
+const fmtDate = iso => { try { return new Date(iso).toLocaleString(undefined, { year: "numeric", month: "short", day: "2-digit", hour: "2-digit", minute: "2-digit" }); } catch (_) { return iso; } };
+let archQ = "";
+function vArchive(){
+  const a = loadArch(), q = archQ.trim().toLowerCase();
+  const list = a.filter(x => !q || [x.name, x.mrn, SITENAME[x.site], x.proto].join(" ").toLowerCase().includes(q));
+  const lab = { ok: "Within", warn: "Caution", bad: "Exceeds", na: "No data" };
+  return `<h2>Archive</h2><p class="lead">${a.length} case${a.length === 1 ? "" : "s"} saved on this device. Save a case from Results; reopen, delete or export here.</p>
+  <div class="card"><label class="f">Search by name, MRN, site or protocol<input id="archQ" value="${esc(archQ)}" placeholder="Search…" autocomplete="off"></label></div>
+  ${a.length ? "" : `<div class="card"><b>No archived cases yet.</b><p class="note">Complete a calculation, then tap <b>Save to archive</b> on the Results screen.</p></div>`}
+  ${list.map(x => `<div class="rc ${x.sum.worst}" data-case="${esc(x.id)}">
+    <div class="head"><b>${esc(x.name || "Unnamed")}</b><span class="pill ${x.sum.worst}">${lab[x.sum.worst]}</span></div>
+    <div class="meta" style="font-size:13px;color:var(--muted)">MRN ${esc(x.mrn || "–")} · ${esc(SITENAME[x.site])} · ${esc(x.proto)}<br>v${x.rev || 1}${x.signed ? ` · approved (${esc(x.signed)})` : " · not approved"} · saved ${esc(fmtDate(x.savedAt))} · ${x.sum.n} organs${x.sum.exceeds.length ? ` · exceeds: ${esc(x.sum.exceeds.join(", "))}` : ""}</div>
+    <div class="actions" style="grid-template-columns:1fr 1fr 1fr"><button type="button" class="btn" data-open="${esc(x.id)}">Open</button><button type="button" class="btn" data-report="${esc(x.id)}">Report PDF</button><button type="button" class="btn ghost" data-del="${esc(x.id)}">Delete</button></div>
+    <div class="actions" data-delconf="${esc(x.id)}" hidden><button type="button" class="btn primary" data-delyes="${esc(x.id)}">Delete case</button><button type="button" class="btn" data-delno="${esc(x.id)}">Keep</button></div></div>`).join("")}
+  <div class="card"><h3>Export <small>all ${a.length} cases</small></h3>
+    <div class="actions"><button type="button" class="btn primary" data-act="expCsv"${a.length ? "" : " disabled"}>Export for Excel (CSV)</button><button type="button" class="btn" data-act="expJson"${a.length ? "" : " disabled"}>Backup file (JSON)</button></div>
+    <div class="actions" style="grid-template-columns:1fr"><label class="btn ghost" style="cursor:pointer">Import backup file<input type="file" id="impFile" accept=".json,application/json" hidden></label></div>
+    <p class="note">CSV: one row per organ per patient, with all inputs, results, dose remaining and protocol. The backup file restores every case on another phone or computer (Import). If a download does not start, use <b>Show CSV text</b> and copy it.</p>
+    <button type="button" class="btn ghost" data-act="showCsv"${a.length ? "" : " disabled"}>Show CSV text</button>
+    <div id="csvBox"></div></div>
+  <p class="note">Privacy: cases include patient names and MRNs and are stored only in this browser on this device. They are not sent anywhere. Clearing Safari/Chrome website data deletes them, so export a backup regularly.</p>
+  <p class="foot">${CREDIT}</p>`;
+}
+function csvRows(){
+  const head = ["Saved","Case ID","Patient","MRN","Site","Protocol","Course 1 end","Course 2 start","Interval (months)","C1 planning system","C1 dose data","C2 planning system","C2 dose data","Organ","alpha/beta (Gy)","Metric","EQD2 Course 1 (Gy)","Recovery (%)","Recovery basis","Residual EQD2 Course 1 (Gy)","EQD2 Course 2 (Gy)","Cumulative without recovery (Gy)","Cumulative with recovery (Gy)","Limit (Gy)","% of limit","Status","EQD2 remaining (Gy)","Max Course 2 dose (Gy)","Course 2 fx for max","Limit note","C1 DVH file","C1 DVH structure","C2 DVH file","C2 DVH structure","Range best (Gy)","Range worst (Gy)","LQ-L cumulative (Gy)","EQD2 left no recovery (Gy)","Max C2 dose no recovery at planned fx (Gy)","Version","Calculated by","Checked by","Approved","App version","Protocol tables"];
+  const rows = [head];
+  for (const x of loadArch()) withState(x.state, () => {
+    const m = months();
+    active().forEach(([o]) => { const R = calcOrgan(o), X = remaining(o);
+      rows.push([x.savedAt.slice(0, 16).replace("T", " "), x.id, S.name, S.mrn, SITENAME[S.site], proto().label, S.c1end, S.c2start, Number.isFinite(m) ? m.toFixed(1) : "",
+        S.c1.tps, S.c1.meth, S.c2.tps, S.c2.meth, o.n, o.ab, o.m, f1(R.e1), R.r, o.basis, f1(R.res), f1(R.e2), f1(R.nom), f1(R.cum),
+        R.lim > 0 ? f1(R.lim) : "", Number.isFinite(R.pct) ? R.pct.toFixed(0) : "", R.lab,
+        X ? f1(X.rem) : "", X && X.n > 0 && Number.isFinite(X.D) ? f1(X.D) : "", X && X.n > 0 ? X.n : "", o.note || "", [S.c1.dvha, S.c1.dvhb].filter(Boolean).join(" | "), [o.srca1, o.srcb1].filter(Boolean).join(" | "), [S.c2.dvha, S.c2.dvhb].filter(Boolean).join(" | "), [o.srca2, o.srcb2].filter(Boolean).join(" | "),
+        ...(() => { const G = rangeOf(o), Q = presOptions(o), pl = Q && X && X.n > 0 ? Q.rows.find(z => z.n === X.n) : null; return [G ? f1(G.best) : "", G ? f1(G.worst) : "", hiFx() ? f1(lqlCum(o).cum) : "", Q ? f1(Q.remWo) : "", pl ? f1(pl.wo) : ""]; })(),
+        S.rev || 1, (S.sign || {}).calcBy || "", (S.sign || {}).checkBy || "", S.locked ? "yes" : "no", x.appVersion || "", x.protoVersion || ""].map(v => (v === "–" ? "" : v)));
+    });
+  });
+  return rows;
+}
+const toCsv = rows => "\ufeff" + rows.map(r => r.map(v => { const t = String(v ?? ""); return /[",\n;]/.test(t) ? '"' + t.replace(/"/g, '""') + '"' : t; }).join(",")).join("\r\n");
+function download(name, text, type){
+  try { const blob = new Blob([text], { type }); const url = URL.createObjectURL(blob); const a = document.createElement("a");
+    a.href = url; a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 1500); toast("Export started: " + name); }
+  catch (_) { toast("Download blocked here – use Show CSV text"); }
+}
+const stamp = () => new Date().toISOString().slice(0, 10);
+
 /* ---------- render & events ---------- */
 function render(){
   $("steps").innerHTML = STEPS.map((s, i) => `<button type="button" class="chip ${i===S.step?"on":""} ${i<S.step?"done":""}" data-step="${i}">${i+1}. ${s}</button>`).join("");
-  $("main").innerHTML = [vSetup, () => vCourse(1), vRecovery, () => vCourse(2), vResults, vEvidence][S.step]();
+  const html = [vSetup, () => vCourse(1), vRecovery, () => vCourse(2), vResults, vEvidence, vArchive][S.step]();
+  $("main").innerHTML = S.locked && S.step <= 3 ? `<div class="alert warn">Approved and locked (v${S.rev || 1}). Inputs are read-only; create a new version on Results to edit.</div><fieldset disabled style="border:0;padding:0;margin:0;min-width:0;display:grid;gap:14px">${html}</fieldset>` : html;
   $("backBtn").style.visibility = S.step === 0 ? "hidden" : "visible";
   $("nextBtn").textContent = S.step === STEPS.length - 1 ? "Back to setup" : "Next: " + STEPS[S.step + 1];
   const on = $("steps").querySelector(".on"); if (on && on.scrollIntoView) try { on.scrollIntoView({ inline: "center", block: "nearest" }); } catch (_) {}
@@ -1487,6 +1973,9 @@ function live(){
 }
 document.addEventListener("input", e => {
   const t = e.target, d = t.dataset;
+  if (t.dataset.dvhtv !== undefined || t.dataset.dvhmap !== undefined || t.dataset.dvhover) return;
+  if (t.id === "calcBy" || t.id === "checkBy"){ sign()[t.id] = t.value; save(); return; }
+  if (t.id === "archQ"){ archQ = t.value; const pos = t.selectionStart; render(); const n = $("archQ"); if (n){ n.focus(); try { n.setSelectionRange(pos, pos); } catch (_) {} } return; }
   if (d.k === "protoSel") return;
   if (d.k){ S[d.k] = t.type === "checkbox" ? t.checked : t.value; if (d.k === "boost") render(); else live(); return; }
   if (d.c){ S["c" + d.c][d.f] = t.value; if (d.f === "meth") render(); else live(); return; }
@@ -1497,6 +1986,15 @@ document.addEventListener("input", e => {
 });
 document.addEventListener("change", e => {
   const t = e.target;
+  if (t.dataset.dvhfile && t.files && t.files[0]){ dvhLoad(+t.dataset.dvhfile, t.files[0]); return; }
+  if (t.dataset.dvhover && DVH){ DVH.over[t.dataset.dvhover] = t.value; render(); return; }
+  if (t.dataset.dvhmap !== undefined && DVH){ DVH.map[+t.dataset.dvhmap] = +t.value; render(); return; }
+  if (t.dataset.dvhtv !== undefined && DVH){ DVH.tv[+t.dataset.dvhtv] = numv(t.value); render(); return; }
+  if (t.id === "impFile" && t.files && t.files[0]){ const r = new FileReader(); r.onload = () => { try {
+      const inc = JSON.parse(r.result); const list = Array.isArray(inc) ? inc : inc.cases; if (!Array.isArray(list)) throw 0;
+      const a = loadArch(); let added = 0; list.forEach(x => { if (x && x.id && x.state && !a.some(y => y.id === x.id)) { a.push(x); added++; } });
+      a.sort((p, q) => String(q.savedAt).localeCompare(String(p.savedAt))); if (saveArch(a)) { render(); toast(`Imported ${added} new case${added === 1 ? "" : "s"}`); }
+    } catch (_) { toast("This file is not an app backup"); } }; r.readAsText(t.files[0]); return; }
   if (t.dataset.k === "protoSel"){ applyProto(t.value); render(); toast("Protocol applied: limits, α/β, metrics and recovery updated"); return; }
   if (t.type === "date"){ if (proto().rec === "uk") applyProto(S.proto); render(); }
 });
@@ -1509,10 +2007,31 @@ document.addEventListener("click", e => {
   const act = d.act;
   if (act === "ukAll"){ const q = ukRule(months()); active().forEach(([o]) => { o.r = q; o.basis = `UK SABR 2025 rule (${q}% for ${f1(months())} mo)`; }); render(); toast(`UK rule applied: ${q} %`); }
   if (act === "addOrgan"){ S.organs.push(blankOrgan("")); render(); const ins = document.querySelectorAll('[data-f="n"]'); ins[ins.length - 1].focus(); }
+  if (d.dvhk){ S["dvhk" + d.dvhk[0]] = d.dvhk[1]; render(); return; }
+  if (d.report){ const x = loadArch().find(y => y.id === d.report); if (x){ S = JSON.parse(JSON.stringify(x.state)); S.caseId = x.caseId || x.id; S.step = 4; render(); printReport(); } return; }
+  if (d.open){ const x = loadArch().find(y => y.id === d.open); if (x){ S = JSON.parse(JSON.stringify(x.state)); S.caseId = x.caseId || x.id; S.step = 4; render(); try { window.scrollTo(0, 0); } catch (_) {} toast("Case opened: " + (x.name || x.id)); } return; }
+  if (d.del){ const c = document.querySelector(`[data-delconf="${d.del}"]`); if (c) c.hidden = false; return; }
+  if (d.delno){ const c = document.querySelector(`[data-delconf="${d.delno}"]`); if (c) c.hidden = true; return; }
+  if (d.delyes){ saveArch(loadArch().filter(y => y.id !== d.delyes));  render(); toast("Case deleted"); return; }
+  if (d.pres){ PRESMODE = d.pres; render(); return; }
+  if (act === "selftest"){ LASTTEST = selfTest(); render(); toast(LASTTEST.pass ? `All ${LASTTEST.n} checks passed` : `${LASTTEST.failed} checks failed`); return; }
+  if (act === "report"){ printReport(); return; }
+  if (act === "markCalc"){ const g = sign(); if (!g.calcBy.trim()) { toast("Enter who calculated"); return; } g.calcAt = new Date().toISOString(); render(); toast("Marked calculated"); return; }
+  if (act === "approve"){ const g = sign();
+    if (!g.calcBy.trim() || !g.checkBy.trim()) { toast("Enter both calculator and checker"); return; }
+    if (g.calcBy.trim().toLowerCase() === g.checkBy.trim().toLowerCase()) { toast("The checker must be a different person"); return; }
+    if (!g.calcAt) g.calcAt = new Date().toISOString(); g.checkAt = new Date().toISOString(); S.locked = true; archiveCurrent(); render(); toast("Approved, locked and archived"); return; }
+  if (act === "newver"){ S.rev = (S.rev || 1) + 1; S.locked = false; S.sign = { calcBy: "", calcAt: "", checkBy: "", checkAt: "" }; render(); toast(`Version ${S.rev} created – previous version stays in the archive`); return; }
+  if (act === "dvhApply"){ dvhApply(); return; }
+  if (act === "dvhClose"){ DVH = null; render(); return; }
+  if (act === "archive"){ archiveCurrent(); render(); }
+  if (act === "expCsv") download(`ReRT_EQD2_archive_${stamp()}.csv`, toCsv(csvRows()), "text/csv;charset=utf-8");
+  if (act === "expJson") download(`ReRT_EQD2_backup_${stamp()}.json`, JSON.stringify({ app: "BOC ReRT EQD2", exported: new Date().toISOString(), cases: loadArch() }, null, 1), "application/json");
+  if (act === "showCsv"){ const box = $("csvBox"); if (box){ box.innerHTML = `<textarea rows="8" readonly style="margin-top:8px;font-size:12px"></textarea>`; const ta = box.querySelector("textarea"); ta.value = toCsv(csvRows()).replace(/^\ufeff/, ""); ta.focus(); ta.select(); } }
   if (act === "example"){ exampleState(S.site); render(); toast("Example case loaded"); }
   if (act === "new"){ $("newConfirm").hidden = false; $("newConfirm").scrollIntoView({ block: "center" }); }
   if (act === "newNo") $("newConfirm").hidden = true;
-  if (act === "newYes"){ freshState(S.site); render(); toast("New patient"); }
+  if (act === "newYes"){ DVH = null; freshState(S.site); S.caseId = null; render(); toast("New patient"); }
   if (act === "copy") copySummary();
   if (act === "print") window.print();
 });
@@ -1522,8 +2041,8 @@ $("nextBtn").onclick = () => go(S.step === STEPS.length - 1 ? 0 : S.step + 1);
 function toast(t){ const el = $("toast"); el.textContent = t; el.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => el.hidden = true, 2400); }
 function copySummary(){
   const m = months(), site = CFG[S.site], p = proto();
-  const crs = c => { const C = S["c"+c]; return `Course ${c}: TPS ${C.tps || "–"}; dose data ${C.meth || "–"}${C.reg ? "; software " + C.reg : ""}; fractions ${site.comp1} ${C.na || "–"}${S.boost ? `, ${site.comp2} ${C.nb || "–"}` : ""}; doses entered as ${C.am === "fx" ? "per fx" : "total"}${S.boost ? ` / ${C.bm === "fx" ? "per fx" : "total"}` : ""}`; };
-  let s = `BOC ${site.title.toUpperCase()} – CUMULATIVE EQD2\n${CREDIT}\nPatient: ${S.name} | MRN: ${S.mrn}\nCourse 1 ended ${S.c1end || "–"}; Course 2 starts ${S.c2start || "–"}; interval ${Number.isFinite(m) ? m.toFixed(1) + " months" : "–"}\n`;
+  const crs = c => { const C = S["c"+c]; return `Course ${c}: TPS ${C.tps || "–"}; dose data ${C.meth || "–"}${C.reg ? "; software " + C.reg : ""}; fractions ${site.comp1} ${C.na || "–"}${S.boost ? `, ${site.comp2} ${C.nb || "–"}` : ""}; ${[C.dvha, C.dvhb].filter(Boolean).length ? "; DVH " + [C.dvha, C.dvhb].filter(Boolean).join(", ") : ""}; doses entered as ${C.am === "fx" ? "per fx" : "total"}${S.boost ? ` / ${C.bm === "fx" ? "per fx" : "total"}` : ""}`; };
+  let s = `BOC ${site.title.toUpperCase()} – CUMULATIVE EQD2\n${CREDIT}\n${verLine()} · case v${S.rev || 1}${S.locked ? ` · approved (calc ${sign().calcBy}, check ${sign().checkBy})` : " · not approved"}\nPatient: ${S.name} | MRN: ${S.mrn}\nCourse 1 ended ${S.c1end || "–"}; Course 2 starts ${S.c2start || "–"}; interval ${Number.isFinite(m) ? m.toFixed(1) + " months" : "–"}\n`;
   s += `Protocol: ${p.label}${p.refs.length ? " [" + p.refs.map(k => P.refs[k]).join(" | ") + "]" : ""}\n${crs(1)}\n${crs(2)}\n\n`;
   active().forEach(([o]) => { const R = calcOrgan(o); if (!Number.isFinite(R.cum)) return;
     s += `${o.n} [${o.m}, α/β ${o.ab}]: EQD2₁ ${f1(R.e1)} → ${f1(R.res)} Gy after ${R.r}% recovery${o.basis ? " (" + o.basis + ")" : ""}; EQD2₂ ${f1(R.e2)} Gy; cumulative ${f1(R.cum)} Gy (no recovery ${f1(R.nom)}); limit ${R.lim > 0 ? f1(R.lim) + " Gy" : "–"}${o.note ? " (" + o.note + ")" : ""} – ${R.lab}${Number.isFinite(R.pct) ? " " + R.pct.toFixed(0) + "%" : ""}; Course 2 allowance: ${remLine(o).replace(/<[^>]+>/g, "")}\n`; });
